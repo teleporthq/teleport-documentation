@@ -18,8 +18,23 @@ module.exports = {
         logo: '/logo.svg',
         sidebar: [
             '/uidl/',
-            '/generators/',
-            '/plugins/'
+            {
+                title: 'Generators',
+                children: [
+                    'generators/',
+                    'generators/about-us',
+                    'generators/funding',
+                    'generators/privacy-policy',
+                    'generators/vision'
+                ],
+
+            },
+            {
+                title: 'Plugins',
+                children: [
+                    '/plugins/'
+                ]
+            },
         ],
         sidebarDepth: 1,
         displayAllHeaders: true,
