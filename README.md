@@ -31,4 +31,3 @@ the progress of our project on our [Github repo](https://github.com/teleporthq/t
 
 We're also very interested in listening to your feedback and suggestions. Please feel free to get in touch with us on our Twitter and Spectrum accounts,
 or even better, if you are in love with the topic, you could join our wonderful group of OSS contributors and build magic with us!
-
