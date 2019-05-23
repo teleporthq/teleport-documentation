@@ -1,44 +1,44 @@
 ### teleportHQ Code Generators
 
-The web platform did not embrace visual editors as the standard way of building UIs. 
-However, we believe code generation is the future and we're dedicating a lot of effort 
-in engineering **scalable**, **extensible** and **reusable** code generation tools. 
+The web platform did not embrace visual editors as the standard way of building UIs.
+However, we believe code generation is the future and we're dedicating a lot of effort
+in engineering **scalable**, **extensible** and **reusable** code generation tools.
 
-Our code generators output **modern JavaScript** in files linked together by with 
-the `ES Modules` standard. We also believe in the modern approach of **component** 
-driven **architecture**, so we worked around the `React` and `Vue` ecosystems. 
-This does not mean that we are neglecting other output targets, but it was easier 
-for us to start with just a few popular options. We also picked two different types 
-of output to show that we can easily switch from one target to another, 
+Our code generators output **modern JavaScript** in files linked together by with
+the `ES Modules` standard. We also believe in the modern approach of **component**
+driven **architecture**, so we worked around the `React` and `Vue` ecosystems.
+This does not mean that we are neglecting other output targets, but it was easier
+for us to start with just a few popular options. We also picked two different types
+of output to show that we can easily switch from one target to another,
 while building the same functionality from the UI perspective.
 
 ### Quality First
 
-It is our strong belief that visual editor tools should generate the best possible 
-quality from the point of view of machine generated code. Developers should be able to 
-open a project that they generate with our tool and instantly feel like home. 
+It is our strong belief that visual editor tools should generate the best possible
+quality from the point of view of machine generated code. Developers should be able to
+open a project that they generate with our tool and instantly feel like home.
 
-The user interfaces should be clearly separated into components and each component 
-should reflect the common good practices and patterns that are popular in the community. 
-Hence, our effort in that direction is significant. This also means that we are open to 
-improvements at all times, since we are fully aware of the everchanging landscape of 
+The user interfaces should be clearly separated into components and each component
+should reflect the common good practices and patterns that are popular in the community.
+Hence, our effort in that direction is significant. This also means that we are open to
+improvements at all times, since we are fully aware of the everchanging landscape of
 frontend development.
 
 ### Transparent Process and Planning
 
-Technical decisions were made and will be made in the future. Our process will be as 
-transparent as possible as we strongly believe in open source and transparency. 
-Hence, we will slowly move our entire planning and thinking process towards github, 
-where we will invite the community to join, in an effort to develop the code generators 
-ecosystem as reliably and as stable as possible. Considering that our aim is to build 
-a community around our open source code, we decided to build a modular architecture 
-and a plugin based system that allows us to decompose our code generators into smaller 
+Technical decisions were made and will be made in the future. Our process will be as
+transparent as possible as we strongly believe in open source and transparency.
+Hence, we will slowly move our entire planning and thinking process towards github,
+where we will invite the community to join, in an effort to develop the code generators
+ecosystem as reliably and as stable as possible. Considering that our aim is to build
+a community around our open source code, we decided to build a modular architecture
+and a plugin based system that allows us to decompose our code generators into smaller
 parts that can be re-assembled in new ways.
 
 ### High level architecture
 
 From a high level perspective we can split the work we are doing into two main areas
-of responsability: Component Generation and Project Generation. These two are very 
+of responsability: Component Generation and Project Generation. These two are very
 different from a technical perspective. The magic happens most of the time in the
 component generator, while the project generator only composes a set of component
 generators and glues togather many generated files into a working project.
@@ -49,65 +49,62 @@ single component entity, with all the complexities and particularities that it p
 Component generation could be broken into the following high level steps:
 
 - creation of the generator function via a factory provided by our packages or by
-user configuration
+  user configuration
 - passing of json data to the created function
 - component uidl data parsing and validation
-- generator function execution 
+- generator function execution
 
 The execution of the component generator function can be borken down
 into the following steps:
 
-- resolving generic uidl content into framework specific content 
+- resolving generic uidl content into framework specific content
 - creation of a basic component entity in the form of one or more
-abstract syntax trees
+  abstract syntax trees
 - running a sequence of additional operation over the abstract
-syntax trees from the base component
-- gathering all results and returning the standard format of a 
-component generator (presented below)
-
+  syntax trees from the base component
+- gathering all results and returning the standard format of a
+  component generator (presented below)
 
 Project generation is completely different compared to component generation. From
 a high level perspective it is composed of the following:
 
 - creation of the generator function via a factory provided by our packages or by
-user configuration
+  user configuration
 - passing of json data to the created function
 - project uidl data parsing and validation
-- splittig the UDIL content into multiple components 
+- splittig the UDIL content into multiple components
 - delegatig the generation of each component to specialized component generators
-inside the project generator
+  inside the project generator
 - accumulating the content form each component generator into a single strucutre
 - merging in the boilerplate content (like package.json and config files)
 - writing either to disk or (in the future) to clouds the final generated project
 
-#### Data driven component code generation 
+#### Data driven component code generation
 
-This section outlines the various steps needed to generate the code of one 
+This section outlines the various steps needed to generate the code of one
 component. This section is theoretical, and will explain into more detail how the
-generator function looks and how it works. 
+generator function looks and how it works.
 
 For API documentation of component generators go here (TODO link to generator api)
 
-
 UIDL (TODO LINK TO UIDL) is the intermediary data format we use to represent structure
 and behavior for our components. This universal language has no opinion on how the
-structure and behaviour need to look like in actual code. 
+structure and behaviour need to look like in actual code.
 
-A component generator takes in the data (the UIDL) for a component and outputs the 
-resulting code as a string. 
-
+A component generator takes in the data (the UIDL) for a component and outputs the
+resulting code as a string.
 
 ```js
-(udilDataContent) => someStringResult
+udilDataContent => someStringResult;
 ```
 
-In other words, component generators are functions that receive UIDL data and returns 
+In other words, component generators are functions that receive UIDL data and returns
 code content. But this is not enough. We need a bit more information about the component
 apart from the genereated code. What happens if:
 
 - we have additional files or assets that need to be shipped with the main code file
 - we have dependecies, like additional components to exist and be importable when this
-component is used in a project. 
+  component is used in a project.
 - the code of the component is split into multiple files for some reason
 
 In order to accomodate the situations mentioned above, we have expanded the component
@@ -115,29 +112,28 @@ function to return a set of "files" which contain not just the content but also 
 intended type of content that they contain, as well as a set of additional instructions
 to be used by a project generator or whoever uses the component generator.
 
-
 ```ts
 type GenerateComponentFunction = (
   input: Record<string, unknown>,
   options: GeneratorOptions
-) => Promise<CompiledComponent>
+) => Promise<CompiledComponent>;
 
 interface CompiledComponent {
-  files: GeneratedFile[]
-  dependencies: Record<string, string>
+  files: GeneratedFile[];
+  dependencies: Record<string, string>;
 }
 
 interface GeneratedFile {
-  name: string
-  fileType: string
-  content: string
+  name: string;
+  fileType: string;
+  content: string;
 }
 ```
 
 With this interface, a component generator needs to implement the `GenerateComponentFunction`
 and return an array of "files" - which are basically just JSON object with a type, name and
-string content - and a map of dependecies (for now) which indicate what external dependecies 
-we need to handle. 
+string content - and a map of dependecies (for now) which indicate what external dependecies
+we need to handle.
 
 A very useless but valid generator would be the one below:
 
@@ -173,16 +169,16 @@ const generateComponent: GenerateComponentFunction = async (
 
 Now, if we would want to actual generate real components, we would need to read the input data.
 
-Let's consider the following basic UIDL structure of a component: 
+Let's consider the following basic UIDL structure of a component:
 
 ```json
 {
   "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
   "name": "Message",
   "node": {
-    "type" : "element",
+    "type": "element",
 
-    "content" : {
+    "content": {
       "elementType": "text",
       "children": [
         {
@@ -191,15 +187,15 @@ Let's consider the following basic UIDL structure of a component:
         }
       ]
     }
-
   }
 }
 ```
-(if you are not familiar with this UIDL representation, you can 
-  read more about it here TODO LINK TO UIDL)
+
+(if you are not familiar with this UIDL representation, you can
+read more about it here TODO LINK TO UIDL)
 
 We would like to generate something similar to the React or Vue
-components seen in the generated content tabs of the example above. 
+components seen in the generated content tabs of the example above.
 
 While this example is simple, it allows us to introduce the concept
 of mapping of content. Let's consider the following question:
@@ -208,10 +204,10 @@ of mapping of content. Let's consider the following question:
 
 Well, for a React or Vue application, this would be a span. But
 for a react-native app, this would be a `<Text>` tag. We need
-to specify a way to map universal node types into framework (and 
-  language) specific content. 
+to specify a way to map universal node types into framework (and
+language) specific content.
 
-This requirement introduces the next utility in the component 
+This requirement introduces the next utility in the component
 generator toolbelt: the `resolver` which need to be configured
 to transform generic types into framework specific types.
 
@@ -222,78 +218,81 @@ The resolver also transforms attributes of generic nodes:
   "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
   "name": "ImageElement",
   "node": {
-    "type" : "element",
-    "content" : {
+    "type": "element",
+    "content": {
       "elementType": "image",
       "attrs": {
-          "url": {
-            "type": "dynamic",
-            "content": {
+        "url": {
+          "type": "dynamic",
+          "content": {
             "referenceType": "prop",
-              "id": "authorAvatarUrl"
-            }
+            "id": "authorAvatarUrl"
           }
         }
+      }
     }
   }
 }
 ```
 
-As you can see in the example above, the `url` attribute becomes 
+As you can see in the example above, the `url` attribute becomes
 a `src` for the web. It might not be the case for other environments,
 or maybe it could become a srcset with a default src via a plugin.
 
 #### Element mapping (incl attr references, children and repeat)
 
 The concept of element mapping comes from the need to generate
-code specific to components of various frameworks from uidl 
+code specific to components of various frameworks from uidl
 definitoins that are generic.
 
-For example, a static text content needs to be wrapped into a 
+For example, a static text content needs to be wrapped into a
 `<span>` in react or vue, but for react native we need a `<Text>` tag.
 
-In a similar way, a link between two pages the application is 
+In a similar way, a link between two pages the application is
 defined by a NextLink, a RouterLink, or simple `<a>` depending on
-the implementaion of the target generators. 
+the implementaion of the target generators.
 
 One of the first steps we need to supply to a generator is a
 way of mapping generic nodes to specific implmenetation dependend
 ones.
 
-Mappings are added to the core resolver class instances. This 
+Mappings are added to the core resolver class instances. This
 object is used by the pipeline plugins to transform uidl chunk
-from generic to framework specific. 
+from generic to framework specific.
 
 ```js
 const myMapping = {
-  "elements": {
-    "container": {
-      "elementType": "div"
+  elements: {
+    container: {
+      elementType: "div"
     }
   },
-  "events": {
-    "click": "onclick"
+  events: {
+    click: "onclick"
   }
-}
+};
 
-const resolver = new Resolver()
-resolver.addMapping(myMapping)
+const resolver = new Resolver();
+resolver.addMapping(myMapping);
 
-const resolvedUIDL = resolver.resolveUIDL({
-  "node": {
-    "type": "element",
-    "content": {
-      "elementType": "container"
+const resolvedUIDL = resolver.resolveUIDL(
+  {
+    node: {
+      type: "element",
+      content: {
+        elementType: "container"
+      }
     }
-  }
-}, options)
+  },
+  options
+);
 ```
 
 In the above exmaple, the `resolvedUIDL` would contain a "div" node,
-not a "container". 
+not a "container".
 
 The above definition will be used to map any container element type
-to a div, and any click event listener to a onclick bind. This is 
+to a div, and any click event listener to a onclick bind. This is
 a basic html mapping.
 
 We provide a set of defaults mappings to be used for generators.
@@ -301,7 +300,7 @@ The most common html, react and vue mappings are availalbe for use.
 
 Mappings merge together, so we can add multiple mappings with even
 overlapping content. This allows us to use default mappings as well
-as overwrite and add more specific mapping functionality. 
+as overwrite and add more specific mapping functionality.
 
 ```js
 const resolver = new Resolver()
@@ -319,7 +318,7 @@ transform `click` events to the specific `onClick` binding.
 
 The component assembly line is the abstraction that is used to allow plugging in
 more functionality on top of a base component. The base component is enhanced, plugin
-by plugin with additoinal code and features. 
+by plugin with additoinal code and features.
 
 Good examples of plugins are additions of prop definitons, typescript interfaces,
 style flavors or extractors to css files. This also allows plugin authors to build more
@@ -328,52 +327,54 @@ specialised plugins in the future and opens the generator to community driven ex
 An asembly line can be configured like in the example below:
 
 ```ts
-const assemblyLine = new AssemblyLine()
-assemblyLine.addPlugin(reactComponentPlugin)
-assemblyLine.addPlugin(stylePlugin)
-assemblyLine.addPlugin(reactPropTypesPlugin)
-assemblyLine.addPlugin(importStatementsPlugin)
+const assemblyLine = new AssemblyLine();
+assemblyLine.addPlugin(reactComponentPlugin);
+assemblyLine.addPlugin(stylePlugin);
+assemblyLine.addPlugin(reactPropTypesPlugin);
+assemblyLine.addPlugin(importStatementsPlugin);
 ```
 
 Each `plugin` takes in the UIDL and the content created by plugins before it in the
 assemblyLine and is expected to return the UIDL and a updated structure which will be
-passed to the next plugin in line. 
+passed to the next plugin in line.
 
-The process is similar to the unix pipeing of command like `ls -la | grep my-project` 
+The process is similar to the unix pipeing of command like `ls -la | grep my-project`
 where we list the current directory and pass in the entire list to the next command which
-will search only for the relevant lines that interest us. 
+will search only for the relevant lines that interest us.
 
 In a similar way, a `reactPropTypesPlugin` will only work on some parts of the base
-component generated by `reactComponentPlugin`. 
+component generated by `reactComponentPlugin`.
 
 ```ts
-const { chunks, externalDependencies } = await assemblyLine.run(resolvedUIDL)
+const { chunks, externalDependencies } = await assemblyLine.run(resolvedUIDL);
 ```
 
 The assembly line runs and returns chunks and external dependency information. The chunks
 will be used by the builder to generate code. The dependencies will be used by project
 generators or something else to assure that other modules needed by this component are
-provided. 
+provided.
 
 #### Plugins
 
 Plugins are used in the Assembly Line. They enhance the basic component that is generated
 by the first plugin in the chain. The first plugin in the chain should be the main skeleton
-generator on top of which the other plugins start running. 
+generator on top of which the other plugins start running.
 
 The plugin structure implements the following interface:
 
 ```ts
 interface ComponentStructure {
-  chunks: ChunkDefinition[]
-  uidl: ComponentUIDL
-  dependencies: Record<string, ComponentDependency>
+  chunks: ChunkDefinition[];
+  uidl: ComponentUIDL;
+  dependencies: Record<string, ComponentDependency>;
 }
 
-type ComponentPlugin = (structure: ComponentStructure) => Promise<ComponentStructure>
+type ComponentPlugin = (
+  structure: ComponentStructure
+) => Promise<ComponentStructure>;
 ```
 
-A plugin basically is a async function that takes in the component structure and is 
+A plugin basically is a async function that takes in the component structure and is
 expected to make alterations to it. When it finished, the resolved content is taken
 by the assembly line and passed to the next plugin in line.
 
@@ -385,44 +386,44 @@ these syntax tress in entities called `chunks`. These chunks are of type:
 
 ```ts
 interface ChunkDefinition {
-  type: string
-  name: string
-  meta?: any
-  content: ChunkContent
-  linkAfter: string[]
+  type: string;
+  name: string;
+  meta?: any;
+  content: ChunkContent;
+  linkAfter: string[];
 }
 
 // TO BE REVISED
-type ChunkContent = string | any | any[]
+type ChunkContent = string | any | any[];
 ```
 
 The chunk content is subject to change and become better defined in the comming updates.
-The idea of chunks is that they will be consumed by syntax tree to code constructors 
-based on the type of chunk. 
+The idea of chunks is that they will be consumed by syntax tree to code constructors
+based on the type of chunk.
 
 For example, we expect the javascript chunk type to contain content which the babel
-javascript code generator can handle. This content happens to be a syntax tree object. 
+javascript code generator can handle. This content happens to be a syntax tree object.
 
 After the asembly line has finihsed running, we get the resulting chunks. These chunks
-are then transformed into string content representing the code of the component. 
+are then transformed into string content representing the code of the component.
 
 ```ts
-const { chunks, externalDependencies } = await assemblyLine.run(resolvedUIDL)
+const { chunks, externalDependencies } = await assemblyLine.run(resolvedUIDL);
 
-const chunksLinker = new Builder()
-const jsCode = chunksLinker.link(chunks.default)
-const file = createFile(fileName, FILE_TYPE.JS, jsCode)
+const chunksLinker = new Builder();
+const jsCode = chunksLinker.link(chunks.default);
+const file = createFile(fileName, FILE_TYPE.JS, jsCode);
 ```
 
 The code above instantiates a builder which will get the default chunk from the asembly line
-and generate the code for it. 
+and generate the code for it.
 
 We know the name default and the fact that this will be a javascript code because we
-configured the asemblyLine and the plugins to generate this kind of content. 
+configured the asemblyLine and the plugins to generate this kind of content.
 
-The name `default` and the fact that this is `javascript` are not general. They are 
-a particular case of react component generator. If we would generate vue, we would have 
-to know about other chunk names, not just the default.  
+The name `default` and the fact that this is `javascript` are not general. They are
+a particular case of react component generator. If we would generate vue, we would have
+to know about other chunk names, not just the default.
 
 ### API
 
