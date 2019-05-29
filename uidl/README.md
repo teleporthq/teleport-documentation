@@ -1,63 +1,14 @@
-# The UIDL Standard
-
-## Introduction
-
-All user interfaces serve the same purpose: allow for an interaction between a human and a machine.
-
-_Note: The UIDL format is intended to be an intermediary format between creation tools
-and the teleport code generators. While the JSON format is editable and writable by humans,
-this is not the intended use._
-
-Functionally speaking, the vocabulary of human-machine interaction is well defined and,
-no matter the medium or the technology used behind it, a user interface will likely be
-built with a dozen atomic visual **elements** such as _titles_, _paragraphs_, _inputs_,
-_images_, _videos_, _links_, _buttons_, etc., and a couple of meaningful **compositions** of
-these elements such as _lists_, _tables_, _forms_ and _menus_.
-
-However, over time the number of channels has increased dramatically (web, mobile,
-tablets, tv, AR/VR) and the number of technologies used for each of those channels
-as well.
-This has resulted in an increased human time cost of building a user interface and
-distributing it to each channel while providing no extra value for the end user.
-
-This is why we have decided to search for a solution which would allow us to focus
-more on the **what** and worry less about the **how**.
-
-Like others before us, we decided to work on a **universal format** that could
-describe all the possible scenarios for a given user interface.
-This format allows us to:
-
-- generate the same user interface with various tools and frameworks
-- transition from one code output to another without effort
-- enable efficient and advanced programmatic manipulation
-
-We have named our universal format **"User Interface Definition Language" (UIDL)**.
-and it is represented by a JSON-based document, an obvious choice given that this format is
-human-readable, supported natively by many programming languages, and easy to manipulate.
-
-Although at the beginning the role of the UIDL seemed to be limited to describing the
-UI elements and their relationship, we are now confident that we can use it also to
-describe user interactions, flows, events, and more complicated UI patterns based on
-component architectures and dynamic data driven applications.
+# Standard
 
 ## Main concepts
 
-As mentioned before the UIDL format is written in a JSON file containing human-readable
-text cosisting of key-value pairs. As the format evolved, we noticed that it was harder and
-harder to assume what type of content we attributed on each key in the UIDL JSON. So, we saw a
-strong need to know what kind of value we are assinging to a key in order to eliminate guesswork.
+The UIDL format is written in a human-readable JSON file. As the format evolves, we noticed that it was harder and harder to assume what type of content we attributed on each key in the UIDL JSON. So, we saw a strong need to know what kind of value we are assinging to a key in order to eliminate guesswork.
 
-Having this in mind we defined the concept of [**node type**](/uidl/#basic-node-types), which tells
-us what type of object to expect to read on a given key in UIDL.
+Having this in mind we defined the concept of [**node type**](/uidl/#basic-node-types), which tells us what type of object to expect to read on a given key in UIDL.
 
-For example, when working with styles, we might need to know up front if the
-`width` of a component has a static value or a dynamic one. And if it is dynamic,
-where is the dynamic content coming from and how do we read such dynamic content.
+For example, when working with styles, we might need to know up front if the `width` of a component has a static value or a dynamic one. And if it is dynamic, where is the dynamic content coming from and how do we read such dynamic content.
 
-Another example is with component children. We need to be able to specify that at
-a certain position in the children array of one component we have slot. Or a simple
-static string, which does not need to be resolved as another component but rather
-as a simple static value.
+Another example is with component children. We need to be able to specify that at a certain position in the children array of one component we have slot. Or a simple static string, which does not need to be resolved as another component but rather as a simple static value.
 
 If we were to define an interface that every node specialise, it would look like this:
 

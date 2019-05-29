@@ -1,18 +1,6 @@
-### teleportHQ Code Generators
+# Architecture
 
-The web platform did not embrace visual editors as the standard way of building UIs.
-However, we believe code generation is the future and we're dedicating a lot of effort
-in engineering **scalable**, **extensible** and **reusable** code generation tools.
-
-Our code generators output **modern JavaScript** in files linked together by with
-the `ES Modules` standard. We also believe in the modern approach of **component**
-driven **architecture**, so we worked around the `React` and `Vue` ecosystems.
-This does not mean that we are neglecting other output targets, but it was easier
-for us to start with just a few popular options. We also picked two different types
-of output to show that we can easily switch from one target to another,
-while building the same functionality from the UI perspective.
-
-### Quality First
+## Quality First
 
 It is our strong belief that visual editor tools should generate the best possible
 quality from the point of view of machine generated code. Developers should be able to
@@ -24,7 +12,7 @@ Hence, our effort in that direction is significant. This also means that we are 
 improvements at all times, since we are fully aware of the everchanging landscape of
 frontend development.
 
-### Transparent Process and Planning
+## Transparent Process and Planning
 
 Technical decisions were made and will be made in the future. Our process will be as
 transparent as possible as we strongly believe in open source and transparency.
@@ -35,7 +23,7 @@ a community around our open source code, we decided to build a modular architect
 and a plugin based system that allows us to decompose our code generators into smaller
 parts that can be re-assembled in new ways.
 
-### High level architecture
+## High level architecture
 
 From a high level perspective we can split the work we are doing into two main areas
 of responsability: Component Generation and Project Generation. These two are very
@@ -79,7 +67,7 @@ a high level perspective it is composed of the following:
 - merging in the boilerplate content (like package.json and config files)
 - writing either to disk or (in the future) to clouds the final generated project
 
-#### Data driven component code generation
+### Data driven component code generation
 
 This section outlines the various steps needed to generate the code of one
 component. This section is theoretical, and will explain into more detail how the
@@ -239,7 +227,7 @@ As you can see in the example above, the `url` attribute becomes
 a `src` for the web. It might not be the case for other environments,
 or maybe it could become a srcset with a default src via a plugin.
 
-#### Element mapping (incl attr references, children and repeat)
+### Element mapping (incl attr references, children and repeat)
 
 The concept of element mapping comes from the need to generate
 code specific to components of various frameworks from uidl
@@ -314,7 +302,7 @@ In the example above, both `htmlMapping` and `reactMapping` define the
 overwrite the existing html mapping. The generator using the resolver will now
 transform `click` events to the specific `onClick` binding.
 
-#### Component Assembly Line
+### Component Assembly Line
 
 The component assembly line is the abstraction that is used to allow plugging in
 more functionality on top of a base component. The base component is enhanced, plugin
@@ -378,7 +366,7 @@ A plugin basically is a async function that takes in the component structure and
 expected to make alterations to it. When it finished, the resolved content is taken
 by the assembly line and passed to the next plugin in line.
 
-#### Chunks and Builder
+### Chunks and Builder
 
 The asembly line and the plugins running inside it work with syntax trees and other
 intermediary structures. They don't work with code. At the end of the pipeline we get
@@ -425,44 +413,12 @@ The name `default` and the fact that this is `javascript` are not general. They 
 a particular case of react component generator. If we would generate vue, we would have
 to know about other chunk names, not just the default.
 
-### API
+## Internals
 
-### Internals
+### ASTs - Babel Types
 
-#### ASTs - Babel Types
+### XML
 
-#### XML
+### JSS
 
-#### JSS
-
-#### Prettier
-
-### Official Component Generators
-
-#### Common flow and plugins
-
-#### API
-
-#### React
-
-#### Vue
-
-#### Routing Components
-
-### Official Project Generators
-
-#### Common flows: entry files, manifest
-
-#### Project Templates
-
-#### Asset Management
-
-#### React
-
-#### Next
-
-#### Vue
-
-#### Nuxt
-
-### Limitations and future explorations
+### Prettier
