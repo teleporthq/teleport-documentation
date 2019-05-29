@@ -1,31 +1,12 @@
 # Examples
 
-The current page illustrates some UIDL examples.
+## Basic Component
 
-If you also want to build your own UIDL starting from this examples and maybe also see some React
-and Vue code being generated ( with our [code generators](generators/) obviously! ) check this
-[component playground](https://repl.teleporthq.io/).
-
-### Most basic examples
-
-#### Creating a "Hello, World!" Component
-
-The most basic we can do is the classic "Hello, World!" example.
-
-The UIDL contains specific component keys like: `name`, `node`, etc. A complete list of the keys
-can be seen if you check the [TypeScript interfaces](/uidl/support.html#typescript-interfaces)
-we are using.
-
-Now, let's focus on the definition of `node`. It contains `type` and `content`. The value of the type
-must be one of the following _static_, _dynamic_, _element_, _repeat_, _conditional_, _slot_, _nested-style_.
-In this case, the type is element. Details about the other types and when to use them can be found
-[here](/uidl/#basic-node-types). The `content` field contains relevant information about the element
-we are creating i.e. `elementType` and the `children`. Inside the array of children, there is only
-one child of a `static` type that contains the text `Hello, World!`
+The **Component UIDL** starts from two mandatory fields: `name` and `node`. The complete specification is available as a [JSON Schema](/uidl/support.html#json-schema) or as [TypeScript interfaces](/uidl/support.html#typescript-interfaces). The `node` is a recursive structure that represents the entire tree-like structure of a component. You can read more about the [different types of nodes](/uidl/#basic-node-types) in the corresponding UIDL section.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "Message",
   "node": {
     "type": "element",
@@ -42,11 +23,28 @@ one child of a `static` type that contains the text `Hello, World!`
 }
 ```
 
-Now let's complicate the example and add `propDefinitions`. Inside of it, we defined a
-`title` key that is referenced in a node of `dynamic` type. Check below the UIDL and compare it
-with the previous example.
+When put through a **React** code generator, this will yield:
+```javascript
+import React from 'react'
 
-```json
+const Message = (props) => {
+  return <span>Hello, World!</span>
+}
+
+export default Message
+```
+
+If you want to build your own UIDL starting from this examples and see the output in real time, check out the online [component playground](https://repl.teleporthq.io/).
+
+:::tip
+The UIDL element types (ex: container, text, image, etc.) are platform indepentent and can represent any kind of interface, not being locked-in for web interfaces.
+:::
+
+## Referencing Dynamic Values
+
+Dynamic data can be of [multiple types](/uidl/#basic-node-types). If you want to pass a dynamic property to a component, you will define that property (ex: `title`) in `propDefinitions`. Once `title` is defined, it can be referenced in a `dynamic` node anywhere inside the component.
+
+```json{4-6,22-23}
 {
   "name": "Hello World Component",
   "propDefinitions": {
@@ -85,15 +83,15 @@ with the previous example.
 }
 ```
 
-### Getting props from parents
+While building custom UIDLs, keep in mind that all types of nodes have the same structure with `type` and `content`.
 
-A parent component can pass prop data to a child via the **attrs** property of the
-component uidl. So the first step in passing props to children is to see how the parent
-is able to send data down the tree.
+## Passing Props from the Parent
+
+A parent component can pass prop data to a child via the **attrs** property of the component UIDL. In this example, from the parent's point of view, the prop value is `static`. Only the child will treat it as a `dynamic` value in this case.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ParentComponent",
   "node": {
     "type": "element",
@@ -117,17 +115,13 @@ is able to send data down the tree.
 }
 ```
 
-A simple parent component that simply passes data to a child looks like the example above.
-Notice that we had to specify a `dependency` in order to correctly generate the import
-statement.
+Notice that we had to specify a `dependency` in order to generate the import statement. You can [read more about dependencies here](/uidl/#component-element-with-dependencies).
 
-The component receiving the props is next. In order to do something with the attribute
-values that were sent we need to define them as props and reference them via dynamic
-node values.
+The component receiving the props is defined below:
 
-```json
+```json{4-11,24-28,34-38}
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "AuthorCard",
   "propDefinitions": {
     "authorName": {
@@ -135,8 +129,7 @@ node values.
       "defaultValue": "Emma"
     },
     "authorImage": {
-      "type": "string",
-      "defaultValue": "path/to/defualt/URL"
+      "type": "string"
     }
   },
   "node": {
@@ -172,24 +165,53 @@ node values.
 }
 ```
 
-In the example above we have a new component, which has a container node, in which
-we place one image that gets the url (src) set to whatever the parent has sent over
-via attributes. In a similar way, we have just the plain text of the author name as
-the second child of the container.
+Looking back at the two examples with the author card, notice that the names `authorName` and `authorImage` are passed as `attributes` in the parent and used as `props` in the child.
 
-If we look at the two examples, the parent and the child author card, we notice that
-the names `authorName` and `authorImage` are passed as attributes in the parent
-and used as props in the child.
+## Styling Elements
 
-### Creating a component that has styles
+Each element node has a style property where styles are defined. Because styles can be `static` or `dynamic`, the same syntax applies:
 
-Styling is achieved via the `style` tag on element nodes. In order to add styles to
-a component, you must add a element to the node property of the ComponentUIDL. This
-element will be the HTML/Primitive renderable entity which can receive styles.
+```json{12-19}
+{
+  "name": "Simple Component",
+  "node": {
+    "type": "element",
+    "content": {
+      "elementType": "container",
+      "children": [
+        {
+          "type": "element",
+          "content": {
+            "elementType": "text",
+            "style": {
+              "margin": {
+                "type": "static",
+                "content": "10px"
+              },
+              "color": {
+                "type": "static",
+                "content": "red"
+              }
+            },
+            "children": [
+              {
+                "type": "static",
+                "content": "World!"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+```
 
-The [Element Usage with Styles and Attributes](/uidl#with-styles-and-attributes) shows
-how to add styles to a component.
+Visit [the style section](/uidl#with-styles-and-attributes) from the UIDL page to get a better understanding of how styles work.
 
-### Project UIDL
+## Project UIDL
+
+COMING SOON
 
 One example of project UIDL can be found [here](https://github.com/teleporthq/teleport-code-generators/blob/master/examples/uidl-samples/project.json)
+

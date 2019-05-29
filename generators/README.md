@@ -173,7 +173,7 @@ Let's consider the following basic UIDL structure of a component:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "Message",
   "node": {
     "type": "element",
@@ -215,7 +215,7 @@ The resolver also transforms attributes of generic nodes:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ImageElement",
   "node": {
     "type": "element",

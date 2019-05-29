@@ -115,7 +115,7 @@ A simple hello world message could be written like this:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "Message",
   "node": {
     "type": "element",
@@ -158,7 +158,7 @@ The `height: 100px` style value is a good example of a static value.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "Message",
   "node": {
     "type": "element",
@@ -214,7 +214,7 @@ The image that renders the avatar could use this node like so:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ImageElement",
   "node": {
     "type": "element",
@@ -270,7 +270,7 @@ set based on the way `AuthorCard` is used.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ImageElement",
   "node": {
     "type": "element",
@@ -343,7 +343,7 @@ and if it is, it will render the content from `node`.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "MyConditionalElement",
   "stateDefinitions": {
     "isVisible": {
@@ -405,7 +405,7 @@ element nodes and presented accordingly.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "MyRepeatElement",
   "propDefinitions": {
     "items": {
@@ -465,7 +465,7 @@ us to do exactly this.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "MySlotElement",
   "node": {
     "type": "element",
@@ -502,7 +502,7 @@ is active.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "MyNestedStyleElement",
   "node": {
     "type": "element",
@@ -564,7 +564,7 @@ entire spec, you will notice that the UIDL is also constructed as a human readab
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "Message",
   "node": {
     "type": "element",
@@ -791,7 +791,7 @@ accept nodes of type `static` and `dynamic` while the
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ElementWithStylesAndAttributes",
   "propDefinitions": {
     "title": {
@@ -850,7 +850,7 @@ Each element node needs to include it's dependecy declaration for now.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ElementWithDependecies",
   "node": {
     "type": "element",
