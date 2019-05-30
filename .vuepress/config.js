@@ -20,15 +20,21 @@ module.exports = {
         children: ["uidl/", "uidl/examples", "uidl/support"]
       },
       {
-        title: "Generators",
+        title: "Component Generators",
         children: [
-          "generators/",
-          "generators/flavors",
-          "generators/plugins",
-          "generators/post-processors",
-          "generators/project-packer",
-          "generators/publishers",
-          "generators/api-reference"
+          "component-generators/",
+          "component-generators/flavors",
+          "component-generators/plugins",
+          "component-generators/post-processors"
+        ]
+      },
+      {
+        title: "Project Generators",
+        children: [
+          "project-generators/",
+          "project-generators/flavors",
+          "project-generators/project-packer",
+          "project-generators/publishers",
         ]
       },
       {
