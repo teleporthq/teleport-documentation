@@ -1,113 +1,54 @@
-# Standard
+# Structure
 
-## Main concepts
+## Node Types
 
-The UIDL format is written in a human-readable JSON file. As the format evolves, we noticed that it was harder and harder to assume what type of content we attributed on each key in the UIDL JSON. So, we saw a strong need to know what kind of value we are assinging to a key in order to eliminate guesswork.
+The building block of the UIDL structure is the `UIDLNode`. Each node has the same structure:
 
-Having this in mind we defined the concept of [**node type**](/uidl/#basic-node-types), which tells us what type of object to expect to read on a given key in UIDL.
-
-For example, when working with styles, we might need to know up front if the `width` of a component has a static value or a dynamic one. And if it is dynamic, where is the dynamic content coming from and how do we read such dynamic content.
-
-Another example is with component children. We need to be able to specify that at a certain position in the children array of one component we have slot. Or a simple static string, which does not need to be resolved as another component but rather as a simple static value.
-
-If we were to define an interface that every node specialise, it would look like this:
-
-```ts
-interface UIDLAbstractNode {
-  type:
-    | "static"
-    | "dynamic"
-    | "element"
-    | "repeat"
-    | "conditional"
-    | "slot"
-    | "nested-style";
-  content: Record<string, unknown>;
-}
 ```
-
-Currently, we support the following node types. Below you can have an overview
-of them. More details about them you can find in the [Basic node types section](/uidl/#basic-node-types).
-Note that not all node types are intended to be used everywhere. Some types are
-restricted to certain keys in the componnet UIDL.
-
-- [static](/uidl#static-node-type) type: for static string or number values. Used
-  when setting a value to a attribute, style, or as a text node child to a component.
-  By default, component uidl keys that support static content will support plain text
-  to be set to them.
-- [dynamic](/uidl#dynamic-node-type) type: for referencing content that can change
-  over time or that is passed down from parent components as parameters/properties to
-  the component.
-- [element](/uidl#element-node-type) type: for describing an actual presentation
-  entity that gets to be visible on the screen and have more meaning that just a string.
-- [repeat](/uidl#repeat-node-type) and [conditional](/uidl#conditional-node-type)
-  types: for more advanced behaviors when adding elements in the structure of a component.
-  They allow showing some content only if a condition is valid and can map over arrays of
-  data and add the same element for each data entity in the array.
-- [slot](/uidl#slot-node-type) type: defines where the content that is passed down as
-  children from a parent component gets to be placed inside the current component.
-- [nested-style](/uidl#nested-style-node-type) type: defines a style exclusive piece
-  of content used right now by media queries. Contains objects that define the styles to
-  be applied only if that query is active.
-
-### Assignments
-
-When assigning a node to a key, we need to declare the node type and pass in content
-specific to that node type in the content key:
-
-```json
 {
-  "type": "static",
-  "content": "Hello World!!"
+  type: string
+  content: any
 }
 ```
 
-A simple hello world message could be written like this:
+Available types are: `static`, `dynamic`, `element`, `conditional`, `repeat`, `slot` and `nested-style`.
 
-```json
-{
-  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
-  "name": "Message",
-  "node": {
-    "type": "element",
-    "content": {
-      "elementType": "text",
-      "children": [
-        {
-          "type": "static",
-          "content": "Hello World!!"
-        }
-      ]
-    }
-  }
-}
-```
+As the **UIDL** is being traversed, the nodes are interpreted and translated into lines of code:
 
-\_Note: In this docs you might find examples where `"children": ["Hello World!!"]`.
-This is a valid representation also because we automatically assume static content
-for strings in styles, attributes and children assignments`
+- `static` nodes become plain text
+- `dynamic` nodes become expressions inside templates
+- `element` nodes become tags
+- and so on ...
 
-### Basic node types
+The content represents all the information that the current `node` holds. You can read more about the structure of each node below. We will refer to a `UIDLNode` whenever a field in the UIDL allows any node type as a value.
 
-The types of nodes are limited, not simply string in the end, as we know ahead of
-time all the node types we have.
+Note that not all node types are intended to be used everywhere. Some types are restricted to certain keys in the UIDL. Please consult the table below for a full understanding of the usage:
 
-The content is different for each type of node, but always the same structure is
-used for a given type. This means that all nodes of type A will have the same content
-structure.
+|                  | Root Node | Element Children | Attribute | Style | Conditional Ref | Repeat Source |
+| ---------------- | --------- | ---------------- | --------- | ----- | --------------- | ------------- |
+| Static Value     | x         | x                | x         | x     |                 | x             |
+| Dynamic Ref      | x         | x                | x         | x     | x               | x             |
+| Element Node     | x         | x                |           |       |                 |               |
+| Conditional Node | x         | x                |           |       |                 |               |
+| Repeat Node      | x         | x                |           |       |                 |               |
+| Slot Node        |           | x                |           |       |                 |               |
+| NestedStyle Node |           |                  |           | x     |                 |               |
 
-Below we define the common node types. These types can appear in many places in the
-Component UIDL when we are assigning content to attributes, styles, children and
-more.
-
-#### Static node type
+### Static Value
 
 Static node types are static values which are meant to be treated as strings or numbers
 to be passed on by the code generators as they are.
 
-The `height: 100px` style value is a good example of a static value.
+```typescript
+interface UIDLStaticValue {
+  type: 'static'
+  content: string | number | boolean
+}
+```
 
-```json
+The `height: 100px` style value is a good example of a static value. Also, the content of the `text` element is `Hello World`, as a static string.
+
+```json{7-10,15-18}
 {
   "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "Message",
@@ -124,7 +65,7 @@ The `height: 100px` style value is a good example of a static value.
       "children": [
         {
           "type": "static",
-          "content": "Hello World!!"
+          "content": "Hello World"
         }
       ]
     }
@@ -132,40 +73,41 @@ The `height: 100px` style value is a good example of a static value.
 }
 ```
 
-#### Dynamic node type
+### Dynamic Reference
 
-Content that changes over time or based on the attributes passed to one component
-by its parent is declared as dynamic.
+A dynamic node can be used when you need to reference a value that will be supplied at runtime by the generated code. You can think of component internal `state` or component `props`, but also `local` variables.
 
-A dynamic node needs to indicate the source of data to be read and passed to the
-key that uses it. Check [prop definitions](/uidl#prop-definitions) and [state
-definitions](/uidl#state-definitions) out to see how dynamic data is declared
-in components. The definitions for these areas can be read by dynamic nodes.
-
-A good example of this type of node is the name and photo of a person in a card
-component. Card components appear often in contact lists, in about us pages, at
-the end of blog posts and so on. When we want to pass in dynamic data to the
-card component and have it render 10 different persons, we provide the person
-avatar and name as attributes to the card component and reference the values
-pass to each instance via the dynamic node content.
-Note that the declaration below describes the value passed in as attributes in
-the parent component.
-
-```json
-{
-  "type": "dynamic",
-  "content": {
-    "referenceType": "prop",
-    "id": "authorAvatarUrl"
+```typescript
+interface UIDLDynamicReference {
+  type: 'dynamic'
+  content: {
+    referenceType: 'prop' | 'state' | 'local'
+    id: string
   }
 }
 ```
 
-The image that renders the avatar could use this node like so:
+In this case, the content can have the following fields:
 
-```json
+- `referenceType` - Identifies the type of dynamic reference (ex: 'prop', 'state', 'local')
+- `id` - Identifies a specific value from the dynamic object (ex: 'isVisible', 'title')
+
+:::tip
+The `id` field supports the dot notation, ex: 'user.name'
+:::
+
+Such dynamic values are usually declared at the component level root. Check [prop definitions](/uidl#prop-definitions) and [state definitions](/uidl#state-definitions) for that.
+
+An example of using a dynamic `prop` in an attribute:
+
+```json{4-6,15-19}
 {
   "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
+  "propDefinitions": {
+    "authorAvatarUrl": {
+      "type": "string"
+    }
+  },
   "name": "ImageElement",
   "node": {
     "type": "element",
@@ -185,19 +127,36 @@ The image that renders the avatar could use this node like so:
 }
 ```
 
-We also currently support a legacy notation for the dynamic props in the form of
-`$props.authorAvatarUrl` but we plan to stop supporting it in future versions.
+### Element Node
 
-#### Element node type
+When you want to represent a visual element (ex: input, image), you can use an UIDLElementNode. The generators will take these elements and will map them to the specific platform (ex: `container` will become `div`, `image` will become `img`).
 
-An image is an element. We expect the generator to know how to produce a image in
-the final generated code. A custom component like a author card is also an element,
-and we expect the generator to find a definition for the author card and genereate
-code for it, or import it from a third party code package.
+```typescript
+interface UIDLElementNode {
+  type: 'element'
+  content: {
+    elementType: string
+    name?: string
+    dependency?: ComponentDependency
+    style?: Record<string, UIDLDynamicReference | UIDLStaticValue | UIDLNestedStyleDeclaration>
+    attrs?: Record<string, UIDLDynamicReference | UIDLStaticValue>
+    events?: Record<string, EventHandlerStatement[]>
+    children?: UIDLNode[]
+  }
+}
+```
 
-When we assign a new instance of a component to a key, we define the type of element
-via an element node. This node appears most of the time in children arrays, or as the
-main node of a ComponentUIDL.
+In this case, the content can have the following fields:
+
+- `elementType` - the type of the abstract element (ex: 'container', 'text', 'image', etc.)
+- `name` - each element can have a custom name. As a fallback the elementType is used.
+- `dependency` - adds information about the element if it is a custom component or something used from an external package
+- `style` - defines the visual aspect of the element, with css-like properties. Each key is the name of the attribute, each value is of type `static`, `dynamic` or `nested-style`. The UIDLNestedStyleNode is specific here because of the way in which styles are parsed by the generators.
+- `attrs` - defines any properties/attributes added on this element. For custom elements, the attributes will be translated into dynamic values inside. Each key is the
+- `events` - defines a list of simple instructions that can be added on event handlers. This is an experimental feature and has limited capabilities for now.
+- `children` - is the array of `UIDLNode` objects that this element surrounds. Using this field, we ensure the tree-like structure of the entire component.
+
+This is how you define a simple image `element`:
 
 ```json
 {
@@ -211,86 +170,105 @@ main node of a ComponentUIDL.
 }
 ```
 
-The element node can contain other element nodes as children, and the `elementType`
-must exist either in the mappings used by the generator or it should be defined as
-one of the components of the project.
+The element node can contain other element nodes as children, and the `elementType` must exist either in the mappings used by the generator or it should be defined as one of the components of the project.
 
-The example below is a component node which is of type element. The child of this
-component node is also an element, the image of the author which is dynamically
-set based on the way `AuthorCard` is used.
+:::tip
+Notice the composition pattern between two elements.
+:::
 
-```json
+```json{7-7,12-12}
 {
   "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ImageElement",
   "node": {
     "type": "element",
     "content": {
-      "elementType": "image",
-      "attrs": {
-        "url": {
-          "type": "static",
-          "content": "path/to/avatar/url"
+      "elementType": "container",
+      "children": [
+        {
+          "type": "element",
+          "content": {
+            "elementType": "image",
+            "attrs": {
+              "url": {
+                "type": "static",
+                "content": "path/to/avatar/url"
+              }
+            }
+          }
         }
-      }
+      ]
     }
   }
 }
 ```
 
-The element node has the most functionality packed into it. Elements can
-have styles, attributes, npm/local dependencies and event handlers.
+When run through the `React` generator, this will yield:
 
-The full interface for this node is:
+```javascript
+import React from 'react'
 
-```ts
-interface UIDLElement {
-  elementType: string;
-  name?: string;
-  dependency?: ComponentDependency;
-  style?: UIDLStyleDefinitions;
-  attrs?: Record<string, UIDLAttributeValue>;
-  events?: EventDefinitions;
-  children?: UIDLNode[];
+const ImageElement = props => {
+  return (
+    <div>
+      <img src="path/to/avatar/url" />
+    </div>
+  )
+}
+
+export default ImageElement
+```
+
+### Conditional Node
+
+This node should be used when an UIDLNode should be rendered inside a conditional expression (ex: v-if in Vue).
+
+```typescript
+interface UIDLConditionalNode {
+  type: 'conditional'
+  content: {
+    node: UIDLNode
+    reference: UIDLDynamicReference
+    value?: string | number | boolean
+    condition?: {
+      conditions: Array<{
+        operation: string
+        operand?: string | boolean | number
+      }>
+      matchingCriteria?: string
+    }
+  }
 }
 ```
 
-Meaning of fields:
+The content node contains:
 
-- `elementType` is a required string that indicates what tag or instance of
-  component we will create when the generator builds the code for this component.
-- `name` MUST be unique in the entire project or component that is being generated.
-  It is used to define names of variables, exports and so on.
-- `dependency` is a optional object that specifies if the given component comes
-  with any type of dependency from npm or local.
-- `style` defines the visual aspect of the element, with css-like properties
-- `attrs` defines any properties that this instance of the element receives.
-  Components declare prop definitions to receive props, and attrs is the object thru
-  which parent components send values into those props.
-- `events` defines any interaction handlers between the component and the user.
-  For now this is a primitive implementation with limited capabilities.
-- `children` is the array of nodes that this element instantiates. These could
-  all node types that are assignable to children (right now the nested style is the
-  exception).
+- `node` - the instance of UIDLNode which is placed behind the conditional
+- `reference` - a UIDLDynamicReference value based on which the rendering condition is working
+- `value` - the value of the dynamic reference for which the `node` is displayed
+- `condition` - the explicit conditional expression based on which the `node` is displayed
 
-It makes much more sense to talk about the way these keys are used in the context
-of a component, as components have local data (state), props and other entities
-that make the element node shine. Check the [component element usage](/uidl#component-element-usage)
-to see how these are used on a component.
+The conditional node will either use the `value` and make a simple equality (===) between the `reference` and the `value`, or can use the `condition`, which allows for more complex conditionals, using all the available binary and unary operators.
 
-- TODO resolver / mapping influence of `elementType`
+A condition like:
 
-#### Conditional node type
+```json
+{
+  "conditions": [
+    { "operation": ">", "operand": 3 },
+    { "operation": "<=", "operand": 5 }
+  ],
+  "matchingCriteria": "all"
+}
+```
 
-In order to provide conditional rendering functionality for situation where
-a component has different "states" in which it can be rendered, we introduced
-the concept of a **conditional**. This type of node will render different content
-based on a simple condition, like the value of a boolean variable being true or
-false.
+will render into:
 
-The conditional node needs to read a dynamic content via the `reference`, check
-if the equality between the `reference` and the `value` key is set to true,
-and if it is, it will render the content from `node`.
+```javascript
+reference > 3 && reference <= 5
+```
+
+In the following example, you can see a simple conditional node, based on the `true`/`false` value of a `state` key.
 
 ```json
 {
@@ -338,21 +316,35 @@ and if it is, it will render the content from `node`.
 }
 ```
 
-#### Repeat node type
+### Repeat Node
 
-A common pattern in front end development is mapping multiple entities of the same
-type, usually provided in a data array, to a set of identical or similar visual
-elements.
+A common pattern in front end development is mapping multiple entities of the same type, usually provided in a data array, to a set of identical or similar visual elements.
 
-The repeat node type allows us to do exactly this. It allows us to take in a
-dynamic or static data node and for each item that data source, render a element
-node type, preferably with different attributes, as rendering the same thing
-over and over again would not make much sense.
+This node allows you to represent a node inside a repetitive structure (ex: v-for in Vue).
 
-The repeat node needs to read a dynamic content via the `dataSource`, iterate
-it and expose a new variable named `meta.iteratorName` which is availalbe for
-addressing like any other dynamic node. This local data is then used by the
-element nodes and presented accordingly.
+```typescript
+interface UIDLRepeatNode {
+  type: 'repeat'
+  content: {
+    node: UIDLNode
+    dataSource: UIDLAttributeValue
+    meta?: {
+      useIndex?: boolean
+      iteratorName?: string
+      dataSourceIdentifier?: string
+    }
+  }
+}
+```
+
+The content allows the following fields:
+* `node` - the UIDLNode that will be placed inside the repeater
+* `dataSource` - the array of values over which the code iterates
+* `meta.useIndex` - when this flag is present, the iteration declares the `index` value as the position of the element in the array
+* `meta.iteratorName` - a string which overrides the name of the variable inside the iteration (default: `item`)
+* `meta.dataSourceIdentifier` - a string which identifies the local data source variable inside the component. This is used only when you are passing a static array as a dataSource and the framework needs to declare that array as a local variable (ex: Vue will place this on the `data` object)
+
+A simple repeat over an array retrieved from `props`:
 
 ```json
 {
@@ -406,13 +398,32 @@ element nodes and presented accordingly.
 }
 ```
 
-#### Slot node type
+This will yield the following component when using the `Vue` generator:
+```vue
+<template>
+  <div><span v-for="(item, index) in items" :key="index">{{item}}</span></div>
+</template>
 
-This node type is exclusive to arrays of children in element nodes. Because a component
-can have some children declared inline and other children passed from parents we need
-a way to specify where these parent-provided-children get to be placed in relation with
-the other elements of the component. The concept of **slot** from web components allows
-us to do exactly this.
+<script>
+export default {
+  name: 'MyRepeatElement',
+  props: {
+    items: {
+      type: Array,
+      default: ['hello', 'world'],
+    },
+  },
+}
+</script>
+```
+
+### Slot Node
+
+:::warning
+This is not stable yet and is subject to changes in the near future
+:::
+
+This node type is exclusive to arrays of children in element nodes. Because a component can have some children declared inline and other children passed from parents we need a way to specify where these parent-provided-children get to be placed in relation with the other elements of the component. The concept of **slot** from web components allows us to do exactly this.
 
 ```json
 {
@@ -443,13 +454,13 @@ us to do exactly this.
 
 We plan to handle name slots in the future, but for now only the default slot is supported.
 
-#### Nested-style node type
+### Nested-style Node
 
-Styles are css-like properties that are applied directly on the root node of a component.
-With this approach alone we cannot define responsive styles. In order to do so we allowed
-one key in the [style](/uidl#style) object to be the media query string and the
-content to be a set of css-like properties that only get applied when that media query
-is active.
+:::warning
+This is not stable yet and is subject to changes in the near future
+:::
+
+Styles are css-like properties that are applied directly on the root node of a component. With this approach alone you cannot define responsive styles. Using the `nested-style` node, you can define a sub-section instead of a single `static` / `dynamic` value for a give style key.
 
 ```json
 {
@@ -481,37 +492,36 @@ is active.
 }
 ```
 
-## Deep dive
+## Component UIDL
 
-Modern web interfaces are build with atomic building blocks commonly referred to as
-**components**. A component is a composed of on one or more elements and/or other components.
+When building modern interfaces, a component represents a reusable piece of code. In the realm of the UIDL, a component represents a set of tree-like UIDLNodes together with some top level declarations used to identify the dynamic data inside.
 
-Our philosophy for generating websites is to ensure that the codebase you end up with
-is as close as possible, if not even better than a codebase that is 100% build by humans.
-There are two types of UIDL structures we will talk about. The first one is the structure
-for **component UIDL** which defines a single UI component. This structure contains most
-of the component details. The second one is the structure for **project UIDL** which
-represents a collection of components plus some extra information specific about the project.
-Understanding the core elements of the component UIDL is the key to understanding how we
-represent user interfaces in the **JSON format**.
+```typescript
+interface ComponentUIDL {
+  $schema?: string
+  name: string
+  node: UIDLNode
+  meta?: Record<string, any>
+  propDefinitions?: Record<string, UIDLPropDefinition>
+  stateDefinitions?: Record<string, UIDLStateDefinition>
+}
+```
 
-Component UIDLs, like any JSONs, are made up of key value pairs. Because we have
-many keys that receive the same type of values, we defined the concept of `Node Types`
-which describe what type of values we assign.
+The **fields** that can be used at the component root level:
 
-### Component UIDL
+- `name` - **unique string** name identifier of the component. The name is used for generating the component name, but can also represent the file name when used in a project generation process.
+- `node` - Any instance of `UIDLNode` which becomes the **root node** of the rendered component.
 
-A single component is represented like a recursive structure. You can pretty much see
-the correlation between the **UIDL** and the **HTML** document from the beginning.
+Additionally, depending on the context you can use one of the following **optional fields**:
 
-The advantage of keeping the information in a JSON format, rather than XML, is that we
-can easily extend the structure with additional sub-structures which are not relevant
-from a visual perspective. Also, JSON manipulation is significantly easier in the realm
-of JavaScript.
+- `$schema` - **url** pointing to the exact version of the component [UIDL schema](/uidl/support.html#json-schema).
+- `meta` - **object** containing dynamic values, also used at other levels throughout the UIDL.
+- `stateDefinitions` - **object** containing information used to define the state of a component.
+  For more details about props definition structure check below the [State Definitions](/uidl/#state-definitions) dedicated section.
+- `propDefinitions` - **object** with information used as a content for the component.
+  For more details about state definition structure check below the [Prop Definitions](/uidl/#prop-definitions) dedicated section.
 
-As you can see from the example below, a component can be easily understand just by
-reading the JSON document. As we will go over the separate parts and subsections in the
-entire spec, you will notice that the UIDL is also constructed as a human readable document.
+A basic component consisting of a single `text` element with some static value inside can be represented like this:
 
 ```json
 {
@@ -532,27 +542,24 @@ entire spec, you will notice that the UIDL is also constructed as a human readab
 }
 ```
 
-The most basic UIDL component requires a just a few **fields** at the root level:
+which would yield (in Vue):
+```vue
+<template>
+  <span>Hello World!!</span>
+</template>
 
-- `name` - **unique string** name identifier of the component. The name is required as it
-  becomes more relevant in the project UIDL and it also serves as the generated component name by default.
-- `node` - recursive **object** structure. The UIDL for a components starts from a single **root node**
-  which becomes the root node of the component.
+<script>
+export default {
+  name: 'Message',
+}
+</script>
+```
 
-Additionally, depending on the context you can use one of the following **optional fields**:
-
-- `$schema` - **url** pointing to the exact version of the component UIDL schema.
-- `meta` - **object** containing dynamic values, also used at other levels throughout the UIDL.
-- `stateDefinitions` - **object** containing information used to define the state of a component.
-  For more details about props definition structure check below the [State Definitions](/uidl#state-definitions) dedicated section.
-- `propDefinitions` - **object** with information used as a content for the component.
-  For more details about state definition structure check below the [Prop Definitions](/uidl#prop-definitions) dedicated section.
-
-A more **complex example** of a UIDL component would be this:
+A more **complex example** of a UIDL component would be this `AuthorCard`:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/teleporthq/teleport-code-generators/master/src/uidl-definitions/schemas/component.json",
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "AuthorCard",
   "propDefinitions": {
     "title": {
@@ -603,46 +610,33 @@ A more **complex example** of a UIDL component would be this:
 }
 ```
 
-As you can see, a component can describe an entire tree of subcomponents
-that work together to build the user interface required for a given functionality.
+:::tip
+As you can see, a component can describe an entire tree of subcomponents that work together to build the user interface required for a given functionality.
+:::
 
-For more information about the types of children and values a component
-can have, check the [node types](/uidl/#basic-node-types) section of the docs.
+:::tip
+For more information about the types of children and values a component can have, check the [node types](/uidl/#node-types) section of the docs.
+:::
 
-#### Prop Definitions
+### Prop Definitions
 
-Component properties act like the public api of each component. With props, parrent components
-can pass down data and preferences to their children. A component must define its own props
-via prop definitions in order to be able to use them.
+Component properties act like the public interface of each component. Using props, the parent component can pass any value to any of its children. A component must define its props via `propDefinitions` in order to be able to use them safely.
 
-The UIDL prop definitions are structured inside an object where the key-value pairs have the following pattern:
-
-- the key is a string
-- the value is an object that must contain a `type` key and with one of enum values:
-  "string", "boolean", "number", "array", "func", "object", or "children". Optionally,
-  this object can contain **defaultValue** and some **meta** information which are also objects.
-
-For better clarification check below the `patternProperties` we are currently using
-and one sample example on how to define your own propDefinitions.
-
-```json
-{
-  "patternProperties"": {
-    ".*": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["type"],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["string", "boolean", "number", "array", "func", "object", "children"]
-        },
-        "defaultValue": {},
-        "meta": {"type": "object"}
-      }
-    }
+Each prop definition has to follow this interface:
+```typescript
+interface UIDLPropDefinition {
+  type: string
+  defaultValue?: string | number | boolean | ...
+  isRequired?: boolean
+  meta?: Record<string, any>
 }
 ```
+
+The UIDL prop definitions are structured in an object where the name of the `prop` is the `key` and the `value` is a `UIDLPropDefinition`. Inside the prop definition you can set:
+* `type` - the **type** of the prop (ex: string, number, boolean, object, etc.)
+* `defaultValue` - the value used by the components when the prop is not provided
+* `isRequired` - a **boolean** flag indicating if the prop is marked as required in the generated code
+* `meta` - additional **info** which can be sent to the component generators
 
 Sample example of propDefinitions:
 
@@ -671,24 +665,29 @@ Sample example of propDefinitions:
 }
 ```
 
-#### State Definitions
+### State Definitions
 
-Components which might have local data which changes after they have rendered on the screen
-need to declare what data they want to keep locally. In order to alter local data, components
-must declare state entities, as in stateful data which can change without any new thing happening
-in the parent componets.
+Components can declare state keys as internal values, which are encapsulated inside them. There are a couple of *experimental* instructions which can be used to declare changes to the state at runtime. State values are regularly used to render `conditional` or `repeat` nodes.
 
-The UIDL state definitions are structured inside an object where the key-value pairs have the
-following pattern:
+Similarly to [propDefinitions](/uidl/#prop-definitions), `stateDefinitions` is an object, where the `key` is the name of the `state` and the `value` is of type `UIDLStateDefinition`:
 
-- the key is a string
-- the value is an object that must contain a `type` key and with one of enum values:
-  "string", "boolean", "number", "array", "func", "object", or "children".
-  Optionally, this object can contain **defaultValue** and some **meta** information
-  which are also objects.
+```typescript
+interface UIDLStateDefinition {
+  type: string
+  defaultValue: string | number | boolean | ...
+  values?: Array<{
+    value: string | number | boolean
+    meta?: { ... }
+  }>
+}
+```
 
-State definitions are identical at this point with [prop definitions](/uidl#prop-definitions).
-Sample example of stateDefinitions:
+where:
+* `type` - represents the **type** of the state (ex: string, number, boolean, object, array etc.)
+* `defaultValue` - is the initial state value
+* `values` - is an array of exact values that the state can be in. This is used for now when defining the routing for projects. In the future, this would be the basis for defining more complex state transitions.
+
+A sample of stateDefinitions:
 
 ```json
 {
@@ -707,13 +706,11 @@ Sample example of stateDefinitions:
 }
 ```
 
-#### Component Content Node
+### Component Node
 
-Each component UIDL must contain a single content node. This node describes what
-this component looks like when it is displayed.
+Each component UIDL must contain a single content `node`. This node describes what this component looks like when it is displayed. The **root node** is any element of type `UIDLNode`. Check [the table from the node types section](/uidl/#node-types) to understand which nodes can be used as the **root node**.
 
-There are many types of values that we can assign to the node, but the most common
-node type used by components is the [element type](/uidl#element-node-type).
+Here's an example where the **root node** is of type `element` and renders an `image` element:
 
 ```json
 {
@@ -729,16 +726,50 @@ node type used by components is the [element type](/uidl#element-node-type).
 }
 ```
 
-#### Examples
+### Other examples
 
-##### Component element with styles and attributes
+#### Assignments
 
-Components end up having element nodes as leafs most of the time.
-These elements have styles, attributes, events and dependencies.
+When assigning a node to a key, we need to declare the node type and pass in content
+specific to that node type in the content key:
 
-Styles and attributes can receive very similar values. They both
-accept nodes of type `static` and `dynamic` while the
-`nested-styles` node type is exclusive to style.
+```json
+{
+  "type": "static",
+  "content": "Hello World!!"
+}
+```
+
+A simple hello world message could be written like this:
+
+```json
+{
+  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
+  "name": "Message",
+  "node": {
+    "type": "element",
+    "content": {
+      "elementType": "text",
+      "children": [
+        {
+          "type": "static",
+          "content": "Hello World!!"
+        }
+      ]
+    }
+  }
+}
+```
+
+:::tip
+To write your UIDLs faster, you can also use something like: `"children": ["Hello World!!"]`. This is a valid representation also because the generators automatically assume static content for strings in styles, attributes and children assignments
+:::
+
+#### Component element with styles and attributes
+
+Components end up having element nodes as leafs most of the time. These elements have styles, attributes, events and dependencies.
+
+Styles and attributes can receive very similar values. They both accept nodes of type `static` and `dynamic` while the `nested-styles` node type is exclusive to style.
 
 ```json
 {
@@ -787,15 +818,11 @@ accept nodes of type `static` and `dynamic` while the
 }
 ```
 
-##### Component element with dependencies
+#### Component element with dependencies
 
-Simply adding primitive elements like containers and images is not enough to build
-more complex visual user interfaces. Sometimes we might want to rely on a third party
-package for a specific component, or we want to define the components ourselves and
-reuse them in multple place.
+Simply adding primitive elements like containers and images is not enough to build more complex visual user interfaces. Sometimes we might want to rely on a third party package for a specific component, or we want to define the components ourselves and reuse them in multple place.
 
-In order to do so we have the **dependency** key option which will allow us to specify what
-import statements need to appear in the component that uses instances of a given element.
+In order to do so we have the **dependency** key option which will allow us to specify what import statements need to appear in the component that uses instances of a given element.
 
 Each element node needs to include it's dependecy declaration for now.
 
@@ -849,46 +876,45 @@ Each element node needs to include it's dependecy declaration for now.
 }
 ```
 
-### Project UIDL
+## Project UIDL
 
-A project written with UIDL is represented by an object containing specific information
-i.e. name of the project, meta information, asset storage information, components, etc.
+A project UIDL is a collection of component UIDLs with some additional information on top, related to global settings, assets and routing.
 
-The most basic UIDL structure for a project requires the following **fields** at the root level:
-
-- `name` - **unique string** name identifier of the project.
-- `root` - **object** with the component UIDL that is considered to be the entry point in your project.
-  For more details check [Root Node](/uidl#root-node)
-- `globals` - **object** with project related information. Inside this object, you can nest objects with
-  settings, manifest, assets, global variables or other meta information related to your project.
-  For more details check [Globals](/uidl#globals)
-- `$schema` - **url** pointing to the exact version of the project UIDL schema.
-
-Additionally, depending on the type of project you want to build you can use one of the following **optional fields**:
-
-- `components` - **object** containing other UIDL components. The components should be defined according
-  to the pattern defined below.
-
-```json
-{
-  <!---other UIDL fields -->
-  "components": {
-  "type": "object",
-  "patternProperties": {
-    ".*": {
-      "$ref": "component.json"
+```typescript
+interface ProjectUIDL {
+  $schema?: string
+  name: string
+  globals: {
+    settings: {
+      title: string
+      language: string
     }
+    meta: Array<Record<string, string>>
+    assets: GlobalAsset[]
+    manifest?: WebManifest
   }
-  <!--- other UIDL fields -->
+  root: ComponentUIDL
+  components?: Record<string, ComponentUIDL>
 }
 ```
 
-#### Globals
+The UIDL structure for a project can have the following **fields** at the root level:
 
-The **globals** node contains information specific to your project.
-The following fields must be configured inside this object:
+- `name` - **unique string** name identifier of the project.
+- `root` - **object** with the component UIDL that is considered to be the entry point in your project.
+  For more details check [Root Node](/uidl/#routing)
+- `globals` - **object** with project related information. Inside this object, you can nest objects with
+  settings, manifest, assets, global variables or other meta information related to your project.
+  For more details check [Globals](/uidl/#globals)
+- `$schema` - **url** pointing to the exact version of the project UIDL schema.
+- `components` - **object** containing other UIDL components. The components should be defined according
+  to the pattern defined below.
 
-- `settings` - **object** containing details like **language**, **title**, **paths**, etc.
+### Globals
+
+The **globals** node contains information specific to your project. The following fields can be configured inside this object:
+
+- `settings` - **object** containing global settings like: **language** and **title**.
 
 ```json
 {
@@ -945,7 +971,7 @@ The following fields must be configured inside this object:
 
 The following fields are optional inside the **globals** object:
 
-- `manifest` - **object** contaning the information you would usually put in any web app manifest i.e. its name, author, icon, description.
+- `manifest` - **object** contaning the information for the webapp manifest file
 
 ```json
 {
@@ -970,25 +996,16 @@ The following fields are optional inside the **globals** object:
 }
 ```
 
-- `variables` - **object** containing any other variables you want to consider inside
-  your project. The variables are defined as key-value pairs inside the object.
+### Routing
 
-```json
-{
-  <!---other UIDL fields -->
-  "variables": {
-    "primaryColor": "#822CEC",
-    "secondaryColor": "#414141",
-    "spacing": "10px"
-  }
-  <!---other UIDL fields -->
-}
-```
+:::warning
+Routing is still an experimental feature and might be subjected to change in the future
+:::
 
-#### Root Node
+In the **root** field, you configure the entry point of the project. At the moment, this is limited to defining the top level routing mechanism, but in the future this will allow you to describe different layouts for the entire application.
 
-In the **root** field, you should configure the UIDL component that you considered to be the entry point in your project.
-The component must have the structure as described in [Component UIDL](/uidl#component-uidl).
+The value of the `root` is a [Component UIDL](/uidl#component-uidl).
+
 Below is one sample example of how the root node can look like.
 
 ```json
@@ -1029,28 +1046,12 @@ Below is one sample example of how the root node can look like.
 }
 ```
 
-Note that you can also refer to your already built component like this:
+Navigation from one page (or state) to another in a application depends on the framework running the app. Modern frameworks implement client side routing via their own libraries.
 
-```json
-{
-  <!---other UIDL fields -->
-  "root": {
-    "$ref": "component.json"
-  }
-  <!---other UIDL fields -->
-}
-```
-
-#### Routing
-
-Navigation from one page (or state) to another in a application depends on the
-framework running the app. On the web, the most basic apprpach would be to
-hardcode links as `<a/>` tags. However, apps generated with react router, next,
-vue or nuxt will benefit from a different kind of routing element.
-
-Since each framework implements its own tricks for navigation, we defined the `nav-link`
-special element type which is tranformed by the code generators into the coresponding
-framework specific element.
+Since each framework implements its own tricks for navigation, you can use an abstract `element` called `navlink`. This `navlink` is resolved based on the specific project flavor:
+* for `next.js`, you would get a \<Link\> with a dependency to `next/link`
+* for `vue`, you would get a `<router-link>`
+* and so on ...
 
 ```json
 {
@@ -1073,6 +1074,4 @@ framework specific element.
 }
 ```
 
-When using this element and pointing to a state that the route node has defined,
-the teleport code generator will make the corresponding link between navlink and what
-would perfrom the navigation for that particular framework.
+The value set on `transitionTo` is a `state` key which is specified in the `values` field in the `route` state in the project UIDL. The generators will translate that state key to the `url` in case of web based project generators.
