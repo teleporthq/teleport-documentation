@@ -1,0 +1,15 @@
+{
+    "name": "docs",
+    "version": 2,
+    "scope": "teleport-dev",
+    "alias": [
+        "docs.teleporthq.io"
+    ],
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@now/static-build"
+        }
+    ],
+    "public": true
+}
