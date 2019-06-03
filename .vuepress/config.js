@@ -13,19 +13,30 @@ module.exports = {
     sidebar: [
       {
         title: "Guides",
-        children: ["guides/getting-started", "guides/custom-generator"]
+        children: [
+          "guides/what-is-this",
+          "guides/getting-started",
+          "guides/custom-generator",
+          "guides/glossary"
+        ]
       },
       {
         title: "UIDL",
-        children: ["uidl/", "uidl/examples", "uidl/support"]
+        children: [
+          "uidl/",
+          "uidl/examples",
+          "uidl/support"
+        ]
       },
       {
         title: "Component Generators",
         children: [
           "component-generators/",
           "component-generators/flavors",
+          "component-generators/mappings",
           "component-generators/plugins",
-          "component-generators/post-processors"
+          "component-generators/post-processors",
+          "component-generators/api-reference"
         ]
       },
       {
@@ -41,23 +52,19 @@ module.exports = {
         title: "Community",
         children: [
           "community/",
-          "community/oss",
-          "community/howTo",
-          "community/missing",
-          "community/stuck"
+          "community/contact-us",
+          "community/contributors"
         ]
       },
       {
         title: "Team",
         children: [
-          "team/about-us",
+          "team/",
           "team/vision",
           "team/funding",
           "team/privacy-policy"
         ]
-      },
-      "/links/",
-      "/glossary/"
+      }
     ],
     sidebarDepth: 3,
     displayAllHeaders: false,

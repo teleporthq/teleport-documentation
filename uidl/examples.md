@@ -211,7 +211,7 @@ Visit [the style section](/uidl#with-styles-and-attributes) from the UIDL page t
 
 ## Project UIDL
 
-COMING SOON
+Project UIDLs tend to be quite big since they define a couple of components + the logic for routing and generating pages.
 
 One example of project UIDL can be found [here](https://github.com/teleporthq/teleport-code-generators/blob/master/examples/uidl-samples/project.json)
 

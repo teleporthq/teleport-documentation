@@ -1,4 +1,4 @@
-### About Us
+# About Us
 
 We are a team of designers, developers, and product builders, each of whom has significant experience designing digital solutions. Together, we have a comprehensive overview of what business digital design means.
 
