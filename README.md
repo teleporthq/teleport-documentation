@@ -1,6 +1,6 @@
 ---
 home: true
-# heroImage: /logo.svg
+heroImage: /hero.png
 actionText: Get Started →
 actionLink: /guides/getting-started.html
 features:
@@ -48,7 +48,7 @@ The web platform did not embrace visual editors as the standard way of building 
 
 The teleport code generators output modern code in files linked together by with the `ES Modules` standard. The philosophy of code generation revolves around the idea of splitting the interface into **components**, a common approach of structuring modern interfaces.
 
-For more details, [jump to the generators section of the docs](/generators/).
+For more details, [jump to the generators section of the docs](/component-generators/).
 
 ### REPL
 
