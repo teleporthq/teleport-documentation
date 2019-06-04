@@ -1,4 +1,4 @@
-# Custom Generator
+# Create Your Custom Generator
 All the preconfigured component generators are exposing an instance of the `teleport-component-generator` package. Naturally, you can install the package and build your own generator with [plugins](/component-generators/plugins.html), [mappings](/component-generators/mappings.html) and [postprocessors](/component-generators/post-processors.html).
 
 Let's configure a `React` component generator that uses `styled-jsx` and formats all code with `prettier`:

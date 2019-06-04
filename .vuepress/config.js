@@ -16,7 +16,9 @@ module.exports = {
         children: [
           "guides/what-is-this",
           "guides/getting-started",
-          "guides/custom-generator",
+          "guides/create-your-custom-generator",
+          "guides/generate-your-first-project",
+          "guides/pack-and-publish-your-project",
           "guides/glossary"
         ]
       },
