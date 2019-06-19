@@ -3,12 +3,15 @@ module.exports = {
   description:
     "Building the infrastructure for the next generation of web and mobile interfaces",
   dest: "dist",
-  serviceWorker: true,
+  plugins: {
+    "@vuepress/pwa": {
+      serviceWorker: true,
+      updatePopup: true
+    }
+  },
   evergreen: true,
   themeConfig: {
-    nav: [
-      { text: "REPL", link: "https://repl.teleporthq.io" }
-    ],
+    nav: [{ text: "REPL", link: "https://repl.teleporthq.io" }],
     logo: "/logo.svg",
     sidebar: [
       {
@@ -24,11 +27,7 @@ module.exports = {
       },
       {
         title: "UIDL",
-        children: [
-          "uidl/",
-          "uidl/examples",
-          "uidl/support"
-        ]
+        children: ["uidl/", "uidl/examples", "uidl/support"]
       },
       {
         title: "Component Generators",
@@ -47,7 +46,7 @@ module.exports = {
           "project-generators/",
           "project-generators/flavors",
           "project-generators/project-packer",
-          "project-generators/publishers",
+          "project-generators/publishers"
         ]
       },
       {

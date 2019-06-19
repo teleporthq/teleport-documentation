@@ -4,12 +4,12 @@ heroImage: /hero.png
 actionText: Get Started →
 actionLink: /guides/getting-started.html
 features:
-- title: Platform Independent
-  details: Using the same UI representation, you can build modern Web & Mobile applications.
-- title: Plugable Architecture
-  details: Our plugin system allows you to customize your exported code to the last detail.
-- title: An Open Community
-  details: We open-sourced our entire ecosystem and we invite everyone to contribute to it!
+  - title: Platform Independent
+    details: Using the same UI representation, you can build modern Web & Mobile applications.
+  - title: Plugable Architecture
+    details: Our plugin system allows you to customize your exported code to the last detail.
+  - title: An Open Community
+    details: We open-sourced our entire ecosystem and we invite everyone to contribute to it!
 footer: MIT Licensed | Copyright © 2019-teleport
 ---
 
@@ -28,9 +28,10 @@ However, over time the number of channels has increased dramatically (web, mobil
 This is why we have decided to search for a solution which would allow us to focus more on the **what** and worry less about the **how**.
 
 Like others before us, we decided to work on a **universal format** that could describe all the possible scenarios for a given user interface. This format allows us to:
-* generate the same user interface with various tools and frameworks
-* transition from one code output to another without effort
-* enable efficient and advanced programmatic manipulation
+
+- generate the same user interface with various tools and frameworks
+- transition from one code output to another without effort
+- enable efficient and advanced programmatic manipulation
 
 We have named our universal format **"User Interface Definition Language" (UIDL)**. It is represented by a human-readable JSON document, a format supported natively by many programming languages, and easy to manipulate.
 
@@ -60,4 +61,4 @@ This is an open invitation to the entire community to join us in exploring the f
 
 Keep in mind that there's a lot of work in progress, and many things still need to be done. Our roadmap is public and you can follow it on the [Github repo](https://github.com/teleporthq/teleport-code-generators/issues).
 
-We're also super interested in listening to your feedback and suggestions. Please feel free to get in touch with us on  [Twitter](https://twitter.com/teleporthqio) or over [email](mailto:hello@teleporthq.io). Even better, if you are in love with the topic, you could join our wonderful group of OSS contributors and build magic with us!
+We're also super interested in listening to your feedback and suggestions. Please feel free to get in touch with us on [Twitter](https://twitter.com/teleporthqio) or over [email](mailto:hello@teleporthq.io). Even better, if you are in love with the topic, you could join our wonderful group of OSS contributors and build magic with us!
