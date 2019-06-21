@@ -1,4 +1,4 @@
-# Create Your Custom Generator
+# Custom Component Generator
 All the preconfigured component generators are exposing an instance of the `teleport-component-generator` package. Naturally, you can install the package and build your own generator with [plugins](/component-generators/plugins.html), [mappings](/component-generators/mappings.html) and [postprocessors](/component-generators/post-processors.html).
 
 Let's configure a `React` component generator that uses `styled-jsx` and formats all code with `prettier`:
@@ -19,13 +19,13 @@ npm install @teleporthq/teleport-postprocessor-prettier-js
 Then, we import all dependencies and we create the component generator, using the factory, a named export from the module:
 
 ```javascript
-import { createGenerator } from '@teleporthq/teleport-component-generator'
+import { createComponentGenerator } from '@teleporthq/teleport-component-generator'
 import reactPlugin from '@teleporthq/teleport-plugin-react-base-component'
 import styledJSXPlugin from '@teleporthq/teleport-plugin-react-styled-jsx'
 import importStatementsPlugin from '@teleporthq/teleport-plugin-import-statements'
 import prettierJS from '@teleporthq/teleport-postprocessor-prettier-js'
 
-const generator = createGenerator()
+const generator = createComponentGenerator()
 ```
 
 Next, we have to consider any specific **mapping** for React. By default, the `teleport-component-generator` performs a mapping from the abstract UIDL elements to HTML elements.
@@ -69,6 +69,10 @@ generator.addPlugin(reactPlugin)
 generator.addPlugin(styledJSXPlugin)
 generator.addPlugin(importStatementsPlugin)
 ```
+
+:::warning
+The plugins are called in the exact order in which they are added. The `import` statements plugins hence should be the last one added, to take into consideration all the dependencies added by all the previous plugins. Also the framework base component should naturally be the first one added, since it is generating the initial chunks in the pipeline.
+:::
 
 Finally, we can add the post-processors:
 
@@ -141,7 +145,7 @@ export default ReactComponent
 
 Here's the full running code snippet:
 ```javascript
-import { createGenerator } from '@teleporthq/teleport-component-generator'
+import { createComponentGenerator } from '@teleporthq/teleport-component-generator'
 import reactPlugin from '@teleporthq/teleport-plugin-react-base-component'
 import styledJSXPlugin from '@teleporthq/teleport-plugin-react-styled-jsx'
 import importStatementsPlugin from '@teleporthq/teleport-plugin-import-statements'
@@ -150,7 +154,7 @@ import prettierJS from '@teleporthq/teleport-postprocessor-prettier-js'
 import reactMapping from './react-mapping.json'
 import uidl from './uidl.json'
 
-const generator = createGenerator()
+const generator = createComponentGenerator()
 
 generator.addMapping(reactMapping)
 

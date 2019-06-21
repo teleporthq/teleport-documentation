@@ -15,7 +15,7 @@ npm install @teleporthq/teleport-project-generator-next
 ```
 
 ```javascript
-import nextGenerator from "@teleporthq/teleport-project-generzator-react-next"
+import nextGenerator from "@teleporthq/teleport-project-generator-react-next"
 
 const uidl = {
   /* ... */
@@ -77,4 +77,4 @@ Sample output:
 }
 ```
 
-The next guide will show you how to **pack** your project and **publish** it!
+The next guide will show you how to create a custom **project generator** by defining a **project strategy**. If you are happy with one of the [pre-configured project generators](/project-generators/flavors.html), you can skip to the [next guide](/guides/pack-and-publish-your-project.html), that will show you how to **pack** your project and **publish** it.
