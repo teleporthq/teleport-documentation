@@ -27,6 +27,7 @@
 **_Conditional Node_** - UIDL sub-structure used to define code inside conditional expressions.
 
 **_Content Node_** - UIDL node that contains information about the displayed content of a component.
+
 **D**
 
 ---
@@ -83,9 +84,9 @@
 
 **_Resolver_** - class instance that ensures the generic UIDL definitions are transformed into framework specific information.
 
-**_Root Node_** - element of a Project UIDL structure containing information related to the entry point of the project. It defines a top-level routing mechanism. Its value is a component UIDL. Examples can be found [here](/uidl/#routing)
+**_Root Node_** - element of a Project UIDL structure containing information related to the entry point of the project. It defines a top-level routing mechanism. Its value is a component UIDL. Examples can be found [here](/uidl/#routing).
 
-**_Routing_** - concept that refers to navigation from one page (or state) to another. Modern frameworks implement client side routing via their own libraries. In an UIDL project structure the routing mechanism is described inside `route` field that can be defined in the `stateDefinitions` node. More information and an example can be found [here](/uidl/#routing)
+**_Routing_** - concept that refers to navigation from one page (or state) to another. Modern frameworks implement client side routing via their own libraries. In an UIDL project structure the routing mechanism is described inside `route` field that can be defined in the `stateDefinitions` node. More information and an example can be found [here](/uidl/#routing).
 
 **S**
 
