@@ -1,13 +1,13 @@
 # Custom Component Generator
 All the preconfigured component generators are exposing an instance of the `teleport-component-generator` package. Naturally, you can install the package and build your own generator with [plugins](/component-generators/plugins.html), [mappings](/component-generators/mappings.html) and [postprocessors](/component-generators/post-processors.html).
 
-Let's configure a `React` component generator that uses `styled-jsx` and formats all code with `prettier`:
+Let's configure a `React` component generator that uses `styled-components` and formats all code with `prettier`:
 
 First install the dependencies:
 ```
 npm install @teleporthq/teleport-component-generator
 npm install @teleporthq/teleport-plugin-react-base-component
-npm install @teleporthq/teleport-plugin-react-styled-jsx
+npm install @teleporthq/teleport-plugin-react-styled-components
 npm install @teleporthq/teleport-plugin-import-statements
 npm install @teleporthq/teleport-postprocessor-prettier-js
 ```
@@ -21,7 +21,7 @@ Then, we import all dependencies and we create the component generator, using th
 ```javascript
 import { createComponentGenerator } from '@teleporthq/teleport-component-generator'
 import reactPlugin from '@teleporthq/teleport-plugin-react-base-component'
-import styledJSXPlugin from '@teleporthq/teleport-plugin-react-styled-jsx'
+import styledComponentsPlugin from '@teleporthq/teleport-plugin-react-styled-components'
 import importStatementsPlugin from '@teleporthq/teleport-plugin-import-statements'
 import prettierJS from '@teleporthq/teleport-postprocessor-prettier-js'
 
@@ -66,7 +66,7 @@ Next, we can add all our **plugins** to the existing generator. Note that the **
 
 ```javascript
 generator.addPlugin(reactPlugin)
-generator.addPlugin(styledJSXPlugin)
+generator.addPlugin(styledComponentsPlugin)
 generator.addPlugin(importStatementsPlugin)
 ```
 
@@ -124,30 +124,28 @@ should yield:
 
 ```javascript
 import React from 'react'
+import styled from 'styled-components'
 
 const ReactComponent = (props) => {
   return (
     <div>
-      <span className="text">World!</span>
-      <style jsx>
-        {`
-          .text {
-            color: red;
-          }
-        `}
-      </style>
+      <Text>World!</Text>
     </div>
   )
 }
 
 export default ReactComponent
+
+const Text = styled.span`
+  color: red;
+`
 ```
 
 Here's the full running code snippet:
 ```javascript
 import { createComponentGenerator } from '@teleporthq/teleport-component-generator'
 import reactPlugin from '@teleporthq/teleport-plugin-react-base-component'
-import styledJSXPlugin from '@teleporthq/teleport-plugin-react-styled-jsx'
+import styledComponentsPlugin from '@teleporthq/teleport-plugin-react-styled-components'
 import importStatementsPlugin from '@teleporthq/teleport-plugin-import-statements'
 import prettierJS from '@teleporthq/teleport-postprocessor-prettier-js'
 
@@ -159,7 +157,7 @@ const generator = createComponentGenerator()
 generator.addMapping(reactMapping)
 
 generator.addPlugin(reactPlugin)
-generator.addPlugin(styledJSXPlugin)
+generator.addPlugin(styledComponentsPlugin)
 generator.addPlugin(importStatementsPlugin)
 
 generator.addPostProcessor(prettierJS)
@@ -169,3 +167,5 @@ const run = async() => {
   console.log(result.files[0])
 }
 ```
+
+If you want to play with a **similar configuration**, you can [check out this codesandbox](https://codesandbox.io/s/custom-component-generator-7sej7), where you can edit the input UIDL, the mapping, or just try out different plugins and post-processors.
