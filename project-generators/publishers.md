@@ -7,7 +7,7 @@ A publisher is an utility package that takes as input the [custom format](guides
 - writing the project files to a **disk** path of your choice
 - pushing the project files to a new or an existing **github** repository
 
-Each publisher expects as argument the output of a project generator, having the `GeneratedFolder` type, as mentioned [here](/guides/generate-your-first-project.html). Additionally, you may be required to provide different input data, depending on what task is your selected publisher supposed to do (authentication metadata, output paths, deploy tokens)
+Each publisher expects the output of a project generator (a `GeneratedFolder` type) as an argument. Additionally, you may be required to provide different input data, depending on what task is your selected publisher supposed to do (authentication metadata, output paths, deploy tokens)
 
 Having a generated project, you can use a publisher in three ways.
 The first one is to import the factory function and create a publisher instance like this:
