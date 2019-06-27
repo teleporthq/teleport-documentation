@@ -1,25 +1,101 @@
 # Architecture
 
-Project generation is completely different compared to component generation. From
-a high level perspective it is composed of the following:
+A project generator converts a [ProjectUIDL](/uidl/#project-uidl) into an in-memory structure of files and folders. 
 
-- creation of the generator function via a factory provided by our packages or by
-  user configuration
-- passing of json data to the created function
-- project uidl data parsing and validation
-- splittig the UDIL content into multiple components
-- delegatig the generation of each component to specialized component generators
-  inside the project generator
-- accumulating the content form each component generator into a single strucutre
-- merging in the boilerplate content (like package.json and config files)
-- writing either to disk or (in the future) to clouds the final generated project
+## Project Strategy
 
-> UNDER CONSTRUCTION
+The strategy is the parameter of the `createProjectGenerator` factory. The structure will give all the details needed to start the project generation. The detailed interface is called [`ProjectStrategy`](https://github.com/teleporthq/teleport-code-generators/blob/master/packages/teleport-project-generator/src/types.ts#L3) and can be consulted on GitHub. If we were to simplify this interface, the key parts are its required fields. These give you a better understanding of what a project generator does.
 
-## Routing Components
+```typescript
+interface ProjectStrategy {
+  components: {
+    generator: ComponentGenerator
+    path: string[]
+  }
+  pages: {
+    generator: ComponentGenerator
+    path: string[]
+  }
+  router?: {
+    generator: ComponentGenerator
+    path: string[]
+  }
+  entry: {
+    generator: ComponentGenerator
+    path: string[]
+  }
+  static: {
+    path: string[]
+  }
+}
+```
 
-## Common flows: entry files, manifest
+You can define **component generators** for each separate type of file that a project can generate. You also have to provide a **path** for each type of file. A **path** is defined as an **array of folders** (eg: `["src", "components"]`), the first one being generated directly in the root of the project. An **empty array** means the files will also be generated in the **root**.
+
+Considering this strategy:
+```javascript
+{
+  components: {
+    generator: vueComponentGenerator,
+    path: ["components"],
+  },
+  pages: {
+    generator: vueComponentGenerator,
+    path: ["pages"],
+  },
+  router: {
+    generator: vueRouterComponentGenerator,
+    path: [],
+    fileName: "router"
+  },
+  entry: {
+    generator: htmlEntryGenerator,
+    path: []
+  },
+  static: {
+    path: ["static"]
+  }
+}
+```
+This should be the folder structure at the end of the generation process:
+```
+project
+|--components/
+|----button.js
+|----navbar.js
+|----...
+|--pages/
+|----home.js
+|----about.js
+|----...
+|--static/
+|----manifest.json
+|----favicon.ico
+|----...
+|--router.js
+|--index.html
+|--package.json
+```
+:::tip
+The **router** strategy is optional since some frameworks (next, nuxt) have the routing capability built-in, based on the folder structure of the pages.
+:::
+
+### Components
+
+### Pages
+
+### Routing
+
+### Entry File
+
+### Static Assets
+
+## Project Generation Flow
+
+## Project Generator Object
+
+### Installation and Setup
+
+### API Reference
 
 ## Project Templates
-
-## Asset Management
