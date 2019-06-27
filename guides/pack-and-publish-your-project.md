@@ -1,8 +1,10 @@
 # Pack and Publish Your Project
 
-When used standalone, a [project generator's](/project-generators/flavors.html) output is a custom structure that requires extra parsing in order to build a working project.
+> UNDER CONSTRUCTION
 
-If you want to have a running app and don't want to parse the project generator's result yourself, you can use the [project packer](/project-generators/project-packer.html). Think about the packer as a bundle that encapsulates a project generator together with a [publisher](/project-generators/publishers.html) factory and executes in a pipeline all the necessary steps so as to have a working project.
+When used standalone, a [project generator's](/project-generators/flavors.html) output is an in-memory folder structure. This allows you to run the generator in any environment without depending on the ability to write to the disk.
+
+If you want to have a running app and, you can use the [project packer](/project-generators/project-packer.html). Think about the packer as a bundle that encapsulates a project generator together with a [publisher](/project-generators/publishers.html) and executes in a pipeline all the necessary steps so as to have a working project.
 
 In this tutorial, we'll use the **Next project generator** and the **Now publisher**.
 
@@ -14,8 +16,8 @@ npm install @teleporthq/teleport-project-packer
 npm install @teleporthq/teleport-publisher-now
 ```
 
-To create a publisher factory, you first need to create a Zeit deploy token from your [account settings](https://zeit.co/account/tokens).
-After you have your zeit deploy token, you can begin to create the packer and pack your project:
+To create a `now` publisher, you first need to create a Zeit deploy token from your [account settings](https://zeit.co/account/tokens).
+After you have your **zeit deploy token**, you can begin to create the packer and pack your project:
 
 ```js
 import { createReactNextGenerator } from "@teleporthq/teleport-project-generator-react-next"
