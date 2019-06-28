@@ -21,7 +21,7 @@ module.exports = {
           "guides/getting-started",
           "guides/custom-component-generator",
           "guides/generate-your-first-project",
-          "guides/create-your-project-strategy",
+          "guides/customize-your-project-generator",
           "guides/pack-and-publish-your-project",
           "guides/glossary"
         ]
