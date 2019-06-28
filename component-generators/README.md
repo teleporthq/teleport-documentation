@@ -261,7 +261,7 @@ A plugin basically is a async function that takes in the component structure and
 
 ## Builder and the Link Process
 
-The assembly line and the plugins running inside it work with syntax trees and other intermediary structures. They don't work with code. At the end of the pipeline we get these syntax tress in entities called `chunks`. These chunks are of type:
+The assembly line and the plugins running inside it work with syntax trees and other intermediary structures. They don't work with code. At the end of the pipeline we get these syntax trees in entities called `chunks`. These chunks are of type:
 
 ```ts
 interface ChunkDefinition {

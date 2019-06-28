@@ -23,7 +23,7 @@ export const createReactComponentGenerator = (
 ): ComponentGenerator => {
   const stylePlugin = stylePlugins[variation] || reactInlineStylesPlugin
 
-  const generator = createGenerator()
+  const generator = createComponentGenerator()
 
   generator.addMapping(reactMapping)
   generator.addMapping(mapping)
@@ -73,7 +73,7 @@ The bulk of the package is this simple function that configures the generator:
 export const createVueComponentGenerator = (
   { mapping }: GeneratorOptions = { mapping }
 ): ComponentGenerator => {
-  const generator = createGenerator()
+  const generator = createComponentGenerator()
 
   generator.addMapping(vueMapping)
   generator.addMapping(mapping)
