@@ -561,17 +561,158 @@ Install the zip publisher using the following command
 npm install @teleporthq/teleport-publisher-zip
 ```
 
-```typescript
-import { createZipPublisher } from "@teleporthq/teleport-publisher-zip"
+### Arguments
 
+```typescript
+interface ZipFactoryParams {
+  project: GeneratedFolder
+  // if provided, the result will be written on your disk at this location
+  outputPath?: string
+  // if provided, the zip file will be named after this property
+  outputZipName?: string
+}
+```
+
+:::tip
+You can use the Zip publisher without providing an output path and only get a `Buffer` as result. This way you can manipulate the project content as you desire.
+:::
+
+### API reference
+
+#### `publish(options)`
+
+- **Arguments:** `(ZipFactoryParams) options`
+- **Returns:** `PublisherResponse<Buffer>`
+- **Usage:**
+
+  ```typescript
+  import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+  const result = await ZipPublisher.publish({
+    project: /*..*/
+  })
+  ```
+
+#### `getProject()`
+
+- **Returns:** (GeneratedFolder) the project used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a project as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createZipPublisher } from "@teleporthq/teleport-publisher-zip"
+
+  const publisher = createZipPublisher({ project: /*...*/ })
+
+  const project = publisher.getProject()
+  ```
+
+#### `setProject(project)`
+
+- **Arguments:** (GeneratedFolder) project
+- **Returns:** (void)
+- **Usage:**
+  You can set the project to the publisher before running the actual `publish` method
+
+  ```typescript
+  import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+  const project: GeneratedFolder = {
+    /*..*/
+  }
+  ZipPublisher.setProject(project)
+  ```
+
+#### `getOutputPath()`
+
+- **Returns:** (string) the output path used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with an output path name as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createZipPublisher } from "@teleporthq/teleport-publisher-zip"
+
+  const publisher = createZipPublisher({ outputPath: /*...*/ })
+
+  const project = publisher.getOutputPath()
+  ```
+
+#### `setOutputPath(path)`
+
+- **Arguments:** (string) path
+- **Returns:** (void)
+- **Usage:**
+  You can set output path to the publisher before running the actual `publish` method
+
+  ```typescript
+  import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+  const path: string = {
+    /*..*/
+  }
+  ZipPublisher.setOutputPath(path)
+  ```
+
+#### `getOutputZipName()`
+
+- **Returns:** (string) the output zip name used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with an output zip name as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createZipPublisher } from "@teleporthq/teleport-publisher-zip"
+
+  const publisher = createZipPublisher({ outputZipName: /*...*/ })
+
+  const project = publisher.getOutputZipName()
+  ```
+
+#### `setOutputZipName(zipName)`
+
+- **Arguments:** (string) zipName
+- **Returns:** (void)
+- **Usage:**
+  You can set output zip name to the publisher before running the actual `publish` method
+
+  ```typescript
+  import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+  const zipName: string = {
+    /*..*/
+  }
+  ZipPublisher.setOutputZipName(zipName)
+  ```
+
+### Usage
+
+```typescript
+import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+const outputPath = "YOUR_LOCAL_DISK_PATH"
+const outputZipName = "ZIP_NAME"
 const project: GeneratedFolder = {
   /* ... */
 }
 
-const publisher = createZipPublisher({ project })
+const result = await ZipPublisher.publish({
+  project,
+  outputPath,
+  outputZipName
+})
 
-const result = await publisher.publish()
+console.log(result)
 ```
+
+```json
+{
+  success: true
+  payload: Buffer<...>
+}
+```
+
+:::tip
+If an `outputPath` is provided, the zip containing all the project files will be written on your disk.
+:::
 
 ## Disk
 
@@ -581,14 +722,111 @@ Install the disk publisher using the following command
 npm install @teleporthq/teleport-publisher-disk
 ```
 
-```typescript
-import { createDiskPublisher } from "@teleporthq/teleport-publisher-disk"
+### Arguments
 
+```typescript
+interface DiskFactoryParams {
+  project: GeneratedFolder
+  // The result will be written on your disk at this location
+  outputPath: string
+}
+```
+
+### API reference
+
+#### `publish(options)`
+
+- **Arguments:** `(DiskFactoryParams) options`
+- **Returns:** `PublisherResponse<string>`
+- **Usage:**
+
+  ```typescript
+  import DiskPublisher from "@teleporthq/teleport-publisher-disk"
+
+  const result = await DiskPublisher.publish({
+    project: /*..*/,
+    outputPath: /*..*/
+  })
+  ```
+
+#### `getProject()`
+
+- **Returns:** (GeneratedFolder) the project used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a project as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createDiskPublisher } from "@teleporthq/teleport-publisher-disk"
+
+  const publisher = createDiskPublisher({ project: /*...*/ })
+
+  const project = publisher.getProject()
+  ```
+
+#### `setProject(project)`
+
+- **Arguments:** (GeneratedFolder) project
+- **Returns:** (void)
+- **Usage:**
+  You can set the project to the publisher before running the actual `publish` method
+
+  ```typescript
+  import DiskPublisher from "@teleporthq/teleport-publisher-disk"
+
+  const project: GeneratedFolder = {
+    /*..*/
+  }
+  DiskPublisher.setProject(project)
+  ```
+
+#### `getOutputPath()`
+
+- **Returns:** (string) the output path used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with an output path name as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createDiskPublisher } from "@teleporthq/teleport-publisher-disk"
+
+  const publisher = createDiskPublisher({ outputPath: /*...*/ })
+
+  const project = publisher.getOutputPath()
+  ```
+
+#### `setOutputPath(path)`
+
+- **Arguments:** (string) path
+- **Returns:** (void)
+- **Usage:**
+  You can set output path to the publisher before running the actual `publish` method
+
+  ```typescript
+  import DiskPublisher from "@teleporthq/teleport-publisher-disk"
+
+  const path: string = {
+    /*..*/
+  }
+  DiskPublisher.setOutputPath(path)
+  ```
+
+### Usage
+
+```typescript
+import DiskPublisher from "@teleporthq/teleport-publisher-disk"
+
+const outputPath = "YOUR_LOCAL_DISK_PATH"
 const project: GeneratedFolder = {
   /* ... */
 }
 
-const publisher = createDiskPublisher({ project })
+const result = await DiskPublisher.publish({ project, outputPath })
 
-const result = await publisher.publish()
+console.log(result)
+```
+
+```json
+{
+  success: true
+  payload: "YOUR_LOCAL_DISK_PATH"
+}
 ```
