@@ -2,7 +2,7 @@
 
 When used standalone, a [project generator's](/project-generators/flavors.html) output is an in-memory folder structure. This allows you to run the generator in any environment without depending on the ability to write to the disk.
 
-If you want to have a running app and, you can use the [project packer](/project-generators/project-packer.html). Think about the packer as a bundle that encapsulates a project generator together with a [publisher](/project-generators/publishers.html) and executes in a pipeline all the necessary steps so as to have a working project.
+If you want to have a running app and, you can use the [project packer](/project-generators/project-packer.html).
 
 In this tutorial, we'll use the **Next project generator** and the **Now publisher**.
 
@@ -21,7 +21,7 @@ import ReactNextGenerator from "@teleporthq/teleport-project-generator-react-nex
 import NowPublisher from "@teleport/teleport-publisher-now"
 
 const ZEIT_TOKEN = "YOUR_ZEIT_DEPLOY_HERE"
-const projectUidl = {
+const projectUidl: ProjectUIDL = {
   /* ... */
 }
 
