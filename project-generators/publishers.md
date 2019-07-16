@@ -1,6 +1,6 @@
 # Publishers
 
-A publisher is an utility package that takes as input the [custom format](guides/generate-your-first-project.html) result of a project generator and helps you get a running application faster, by:
+A publisher is an utility package that takes as input the [custom format](../guides/generate-your-first-project.html) result of a project generator and helps you get a running application faster, by:
 
 - deploying it on **Zeit** or **Netlify**
 - creating a **zip** file containing the entire project
@@ -154,7 +154,7 @@ You can create a Zeit deploy token from your [account settings](https://zeit.co/
   ```typescript
   import NowPublisher from "@teleporthq/teleport-publisher-now"
 
-  const token = "MY_DEPLOY_TOKEN"
+  const token = "YOUR_DEPLOY_TOKEN"
   NowPublisher.setToken(token)
   ```
 
@@ -163,11 +163,10 @@ You can create a Zeit deploy token from your [account settings](https://zeit.co/
 ```typescript
 import NowPublisher from "@teleporthq/teleport-publisher-now"
 
+const deployToken = "YOUR_DEPLOY_TOKEN_HERE"
 const project: GeneratedFolder = {
   /* ... */
 }
-
-const deployToken = "YOUR_DEPLOY_TOKEN_HERE"
 
 const result = await NowPublisher.publish({ project, deployToken })
 
@@ -191,16 +190,116 @@ Install the netlify publisher using the following command
 npm install @teleporthq/teleport-publisher-netlify
 ```
 
-```typescript
-import { createNetlifyPublisher } from "@teleporthq/teleport-publisher-netlify"
+### Arguments
 
+```typescript
+interface NetlifyFactoryParams {
+  project: GeneratedFolder
+  accessToken: string
+}
+```
+
+:::tip
+You can create a Netlify access token from your [account settings](https://app.netlify.com/user/applications#oauth).
+:::
+
+### API reference
+
+#### `publish(options)`
+
+- **Arguments:** `(NetlifyFactoryParams) options`
+- **Returns:** `PublisherResponse<string>`
+- **Usage:**
+
+  ```typescript
+  import NetlifyPublisher from "@teleporthq/teleport-publisher-netlify"
+
+  const result = await NetlifyPublisher.publish({
+    project: /*..*/,
+    accessToken: /*..*/
+  })
+  ```
+
+#### `getProject()`
+
+- **Returns:** (GeneratedFolder) the project used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a project as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createNetlifyPublisher } from "@teleporthq/teleport-publisher-netlify"
+
+  const publisher = createNetlifyPublisher({ project: /*...*/ })
+
+  const project = publisher.getProject()
+
+  ```
+
+#### `setProject(project)`
+
+- **Arguments:** (GeneratedFolder) project
+- **Returns:** (void)
+- **Usage:**
+  You can set the project to the publisher before running the actual `publish` method
+
+  ```typescript
+  import NetlifyPublisher from "@teleporthq/teleport-publisher-netlify"
+
+  const project: GeneratedFolder = {
+    /*..*/
+  }
+  NetlifyPublisher.setProject(project)
+  ```
+
+#### `getAccessToken()`
+
+- **Returns:** (string) the access token used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with an access token as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createNetlifyPublisher } from "@teleporthq/teleport-publisher-netlify"
+
+  const publisher = createNetlifyPublisher({ accessToken: "MY_DEPLOY_TOKEN" })
+
+  const deployToken = publisher.getAccessToken()
+  ```
+
+#### `setAccessToken(token)`
+
+- **Arguments:** (string) token
+- **Returns:** (void)
+- **Usage:**
+  You can set the access token to the publisher before running the actual `publish` method
+
+  ```typescript
+  import NetlifyPublisher from "@teleporthq/teleport-publisher-netlify"
+
+  const token = "YOUR_ACCESS_TOKEN"
+  NowPublisher.setAccessToken(token)
+  ```
+
+### Usage
+
+```typescript
+import NetlifyPublisher from "@teleporthq/teleport-publisher-netlify"
+
+const accessToken = "YOUR_ACCESS_TOKEN"
 const project: GeneratedFolder = {
   /* ... */
 }
 
-const publisher = createNetlifyPublisher({ project })
+const result = await NetlifyPublisher.publish({ project, accessToken })
+console.log(result)
+```
 
-const result = await publisher.publish()
+Sample output:
+
+```json
+{
+  success: true
+  payload: "https://teleport-project-template-react-next.netlify.com"
+}
 ```
 
 ## GitHub
@@ -211,16 +310,247 @@ Install the github publisher using the following command
 npm install @teleporthq/teleport-publisher-github
 ```
 
-```typescript
-import { createGithubPublisher } from "@teleporthq/teleport-publisher-github"
+### Arguments
 
+```typescript
+interface GithubFactoryParams {
+  project: GeneratedFolder
+  authMeta?: ServiceAuth
+  repositoryOwner?: string
+  repository?: string
+  masterBranch?: string // default to 'master'
+  commitBranch?: string // default to 'master'
+  commitMessage?: string
+}
+
+interface ServiceAuth {
+  basic?: {
+    username: string
+    password: string
+  }
+  token?: string
+}
+```
+
+:::tip
+As the Github API only allows a limited number of requests/hour for non-authenticated users, it is recommended to use one of the authentication methods that are exposed by the publisher. You can either use your Github username and password or you can create an access token from your [account settings](https://github.com/settings/tokens) and use it when you publish a project.
+:::
+
+### Default values
+
+**repositoryOwner**
+
+- if you choose to authenticate using your username and password, the given username will be used as default for `repositoryOwner`, representing the Github account name where the project will be created or updated (in case it already exists)
+
+**masterBranch**
+
+- `master` will be used as default
+
+**commitBranch**
+
+- `master` will be used as default
+
+**commitMessage**
+
+- `Commit made using TeleportHQ` will be used as default
+
+### API reference
+
+#### `publish(options)`
+
+- **Arguments:** `(GithubFactoryParams) options`
+- **Returns:** `PublisherResponse<string>`
+- **Usage:**
+
+  ```typescript
+  import GithubPublisher from "@teleporthq/teleport-publisher-github"
+
+  const result = await GithubPublisher.publish({
+    project: /*..*/,
+    authMeta: /*..*/,
+  })
+  ```
+
+#### `getProject()`
+
+- **Returns:** (GeneratedFolder) the project used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a project as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createGithubPublisher } from "@teleporthq/teleport-publisher-github"
+
+  const publisher = createGithubPublisher({ project: /*...*/ })
+
+  const project = publisher.getProject()
+  ```
+
+#### `setProject(project)`
+
+- **Arguments:** (GeneratedFolder) project
+- **Returns:** (void)
+- **Usage:**
+  You can set the project to the publisher before running the actual `publish` method
+
+  ```typescript
+  import GithubPublisher from "@teleporthq/teleport-publisher-github"
+
+  const project: GeneratedFolder = {
+    /*..*/
+  }
+  GithubPublisher.setProject(project)
+  ```
+
+#### `getMasterBranchName()`
+
+- **Returns:** (string) the master branch name used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a master branch name as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createGithubPublisher } from "@teleporthq/teleport-publisher-github"
+
+  const publisher = createGithubPublisher({ masterBranch: /*...*/, })
+
+  const project = publisher.getMasterBranchName()
+  ```
+
+#### `setMasterBranchName(branch)`
+
+- **Arguments:** (string) branch
+- **Returns:** (void)
+- **Usage:**
+  You can set the master branch name to the publisher before running the actual `publish` method
+
+  ```typescript
+  import GithubPublisher from "@teleporthq/teleport-publisher-github"
+
+  const branch: string = {
+    /*..*/
+  }
+  GithubPublisher.setMasterBranchName(branch)
+  ```
+
+#### `getCommitBranchName()`
+
+- **Returns:** (string) the commit branch name used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a commit branch name as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createGithubPublisher } from "@teleporthq/teleport-publisher-github"
+
+  const publisher = createGithubPublisher({ commitBranch: /*...*/, })
+
+  const project = publisher.getCommitBranchName()
+  ```
+
+#### `setCommitBranchName(branch)`
+
+- **Arguments:** (string) branch
+- **Returns:** (void)
+- **Usage:**
+  You can set the commit branch name to the publisher before running the actual `publish` method
+
+  ```typescript
+  import GithubPublisher from "@teleporthq/teleport-publisher-github"
+
+  const branch: string = {
+    /*..*/
+  }
+  GithubPublisher.setCommitBranchName(branch)
+  ```
+
+#### `getCommitMessage()`
+
+- **Returns:** (string) the commit message used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a commit message as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createGithubPublisher } from "@teleporthq/teleport-publisher-github"
+
+  const publisher = createGithubPublisher({ commitMessage: /*...*/, })
+
+  const project = publisher.getCommitMessage()
+  ```
+
+#### `setCommitMessage(message)`
+
+- **Arguments:** (string) message
+- **Returns:** (void)
+- **Usage:**
+  You can set the commit message to the publisher before running the actual `publish` method
+
+  ```typescript
+  import GithubPublisher from "@teleporthq/teleport-publisher-github"
+
+  const message: string = {
+    /*..*/
+  }
+  GithubPublisher.setCommitMessage(message)
+  ```
+
+#### `getRepositoryOwner()`
+
+- **Returns:** (string) the repository owner used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a repository owner as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createGithubPublisher } from "@teleporthq/teleport-publisher-github"
+
+  const publisher = createGithubPublisher({ repositoryOwner: /*...*/, })
+
+  const project = publisher.getRepositoryOwner()
+  ```
+
+#### `setRepositoryOwner(owner)`
+
+- **Arguments:** (string) owner
+- **Returns:** (void)
+- **Usage:**
+  You can set the repository owner to the publisher before running the actual `publish` method
+
+  ```typescript
+  import GithubPublisher from "@teleporthq/teleport-publisher-github"
+
+  const owner: string = {
+    /*..*/
+  }
+  GithubPublisher.setRepositoryOwner(owner)
+  ```
+
+### Usage
+
+```typescript
+import GithubPublisher from "@teleporthq/teleport-publisher-github"
+
+const repositoryOwner = "owner_name"
+const repository = "repository_name"
+
+const authMeta = { token: "YOUR_TOKEN_HERE" }
 const project: GeneratedFolder = {
   /* ... */
 }
 
-const publisher = createGithubPublisher({ project })
+const publisher = createGithubPublisher({
+  project,
+  authMeta,
+  repositoryOwner,
+  repository
+})
 
 const result = await publisher.publish()
+
+console.log(result)
+```
+
+```json
+{
+  success: true
+  payload: "https://github.com/owner_name/repository_name"
+}
 ```
 
 ## Zip
@@ -231,17 +561,158 @@ Install the zip publisher using the following command
 npm install @teleporthq/teleport-publisher-zip
 ```
 
-```typescript
-import { createZipPublisher } from "@teleporthq/teleport-publisher-zip"
+### Arguments
 
+```typescript
+interface ZipFactoryParams {
+  project: GeneratedFolder
+  // if provided, the result will be written on your disk at this location
+  outputPath?: string
+  // if provided, the zip file will be named after this property
+  outputZipName?: string
+}
+```
+
+:::tip
+You can use the Zip publisher without providing an output path and only get a `Buffer` as result. This way you can manipulate the project content as you desire.
+:::
+
+### API reference
+
+#### `publish(options)`
+
+- **Arguments:** `(ZipFactoryParams) options`
+- **Returns:** `PublisherResponse<Buffer>`
+- **Usage:**
+
+  ```typescript
+  import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+  const result = await ZipPublisher.publish({
+    project: /*..*/
+  })
+  ```
+
+#### `getProject()`
+
+- **Returns:** (GeneratedFolder) the project used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a project as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createZipPublisher } from "@teleporthq/teleport-publisher-zip"
+
+  const publisher = createZipPublisher({ project: /*...*/ })
+
+  const project = publisher.getProject()
+  ```
+
+#### `setProject(project)`
+
+- **Arguments:** (GeneratedFolder) project
+- **Returns:** (void)
+- **Usage:**
+  You can set the project to the publisher before running the actual `publish` method
+
+  ```typescript
+  import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+  const project: GeneratedFolder = {
+    /*..*/
+  }
+  ZipPublisher.setProject(project)
+  ```
+
+#### `getOutputPath()`
+
+- **Returns:** (string) the output path used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with an output path name as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createZipPublisher } from "@teleporthq/teleport-publisher-zip"
+
+  const publisher = createZipPublisher({ outputPath: /*...*/ })
+
+  const project = publisher.getOutputPath()
+  ```
+
+#### `setOutputPath(path)`
+
+- **Arguments:** (string) path
+- **Returns:** (void)
+- **Usage:**
+  You can set output path to the publisher before running the actual `publish` method
+
+  ```typescript
+  import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+  const path: string = {
+    /*..*/
+  }
+  ZipPublisher.setOutputPath(path)
+  ```
+
+#### `getOutputZipName()`
+
+- **Returns:** (string) the output zip name used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with an output zip name as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createZipPublisher } from "@teleporthq/teleport-publisher-zip"
+
+  const publisher = createZipPublisher({ outputZipName: /*...*/ })
+
+  const project = publisher.getOutputZipName()
+  ```
+
+#### `setOutputZipName(zipName)`
+
+- **Arguments:** (string) zipName
+- **Returns:** (void)
+- **Usage:**
+  You can set output zip name to the publisher before running the actual `publish` method
+
+  ```typescript
+  import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+  const zipName: string = {
+    /*..*/
+  }
+  ZipPublisher.setOutputZipName(zipName)
+  ```
+
+### Usage
+
+```typescript
+import ZipPublisher from "@teleporthq/teleport-publisher-zip"
+
+const outputPath = "YOUR_LOCAL_DISK_PATH"
+const outputZipName = "ZIP_NAME"
 const project: GeneratedFolder = {
   /* ... */
 }
 
-const publisher = createZipPublisher({ project })
+const result = await ZipPublisher.publish({
+  project,
+  outputPath,
+  outputZipName
+})
 
-const result = await publisher.publish()
+console.log(result)
 ```
+
+```json
+{
+  success: true
+  payload: Buffer<...>
+}
+```
+
+:::tip
+If an `outputPath` is provided, the zip containing all the project files will be written on your disk.
+:::
 
 ## Disk
 
@@ -251,14 +722,111 @@ Install the disk publisher using the following command
 npm install @teleporthq/teleport-publisher-disk
 ```
 
-```typescript
-import { createDiskPublisher } from "@teleporthq/teleport-publisher-disk"
+### Arguments
 
+```typescript
+interface DiskFactoryParams {
+  project: GeneratedFolder
+  // The result will be written on your disk at this location
+  outputPath: string
+}
+```
+
+### API reference
+
+#### `publish(options)`
+
+- **Arguments:** `(DiskFactoryParams) options`
+- **Returns:** `PublisherResponse<string>`
+- **Usage:**
+
+  ```typescript
+  import DiskPublisher from "@teleporthq/teleport-publisher-disk"
+
+  const result = await DiskPublisher.publish({
+    project: /*..*/,
+    outputPath: /*..*/
+  })
+  ```
+
+#### `getProject()`
+
+- **Returns:** (GeneratedFolder) the project used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with a project as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createDiskPublisher } from "@teleporthq/teleport-publisher-disk"
+
+  const publisher = createDiskPublisher({ project: /*...*/ })
+
+  const project = publisher.getProject()
+  ```
+
+#### `setProject(project)`
+
+- **Arguments:** (GeneratedFolder) project
+- **Returns:** (void)
+- **Usage:**
+  You can set the project to the publisher before running the actual `publish` method
+
+  ```typescript
+  import DiskPublisher from "@teleporthq/teleport-publisher-disk"
+
+  const project: GeneratedFolder = {
+    /*..*/
+  }
+  DiskPublisher.setProject(project)
+  ```
+
+#### `getOutputPath()`
+
+- **Returns:** (string) the output path used by the publisher instance (if any)
+- **Usage:**
+  When your publisher factory was initialized with an output path name as argument or it has been previously set, you have the possiblity to query for it
+
+  ```typescript
+  import { createDiskPublisher } from "@teleporthq/teleport-publisher-disk"
+
+  const publisher = createDiskPublisher({ outputPath: /*...*/ })
+
+  const project = publisher.getOutputPath()
+  ```
+
+#### `setOutputPath(path)`
+
+- **Arguments:** (string) path
+- **Returns:** (void)
+- **Usage:**
+  You can set output path to the publisher before running the actual `publish` method
+
+  ```typescript
+  import DiskPublisher from "@teleporthq/teleport-publisher-disk"
+
+  const path: string = {
+    /*..*/
+  }
+  DiskPublisher.setOutputPath(path)
+  ```
+
+### Usage
+
+```typescript
+import DiskPublisher from "@teleporthq/teleport-publisher-disk"
+
+const outputPath = "YOUR_LOCAL_DISK_PATH"
 const project: GeneratedFolder = {
   /* ... */
 }
 
-const publisher = createDiskPublisher({ project })
+const result = await DiskPublisher.publish({ project, outputPath })
 
-const result = await publisher.publish()
+console.log(result)
+```
+
+```json
+{
+  success: true
+  payload: "YOUR_LOCAL_DISK_PATH"
+}
 ```
