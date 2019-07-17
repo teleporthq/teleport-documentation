@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "vuepress": "^1.0.1"
+    "vuepress": "^1.0.1",
+    "@vuepress/plugin-google-analytics": "next"
   }
 }
