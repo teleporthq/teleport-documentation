@@ -71,7 +71,7 @@ const htmlFileGenerator = createComponentGenerator()
 htmlFileGenerator.addPostProcessor(prettierHTML)
 ```
 
-For creating a custom project generator, we need to define our [ProjectStrategy](/project-generators/#project-strategy). Let's define the following structure:
+For creating a custom project generator, we need to define our [ProjectStrategy](/project-generators/project-strategy.html). Let's define the following structure:
 
 ```
 project

@@ -7,7 +7,10 @@ module.exports = {
     "@vuepress/pwa": {
       serviceWorker: true,
       updatePopup: true
-    }
+    },
+    '@vuepress/google-analytics': {
+      'ga': 'UA-116252748-3'
+    },
   },
   evergreen: true,
   themeConfig: {
@@ -38,8 +41,7 @@ module.exports = {
           "component-generators/features",
           "component-generators/mappings",
           "component-generators/plugins",
-          "component-generators/post-processors",
-          "component-generators/api-reference"
+          "component-generators/post-processors"
         ]
       },
       {
@@ -47,7 +49,8 @@ module.exports = {
         children: [
           "project-generators/",
           "project-generators/flavors",
-          "project-generators/features",
+          "project-generators/project-strategy",
+          "project-generators/project-template",
           "project-generators/project-packer",
           "project-generators/publishers"
         ]

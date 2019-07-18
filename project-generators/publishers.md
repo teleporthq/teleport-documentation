@@ -9,8 +9,7 @@ A publisher is an utility package that takes as input the [custom format](../gui
 
 Each publisher expects the output of a project generator (a `GeneratedFolder` type) as an argument. Additionally, you may be required to provide different input data, depending on what task is your selected publisher supposed to do (authentication metadata, output paths, deploy tokens)
 
-Having a generated project, you can use a publisher in three ways.
-The first one is to import the factory function and create a publisher instance like this:
+Having a generated project, you can use a publisher in three ways. The first one is to import the factory function and create a publisher instance like this:
 
 ```typescript
 import { createPublisher } from "@teleporthq/teleport-publisher..."
@@ -158,7 +157,7 @@ You can create a Zeit deploy token from your [account settings](https://zeit.co/
   NowPublisher.setToken(token)
   ```
 
-### Usage
+### Example
 
 ```typescript
 import NowPublisher from "@teleporthq/teleport-publisher-now"
@@ -279,7 +278,7 @@ You can create a Netlify access token from your [account settings](https://app.n
   NowPublisher.setAccessToken(token)
   ```
 
-### Usage
+### Example
 
 ```typescript
 import NetlifyPublisher from "@teleporthq/teleport-publisher-netlify"
@@ -521,7 +520,7 @@ As the Github API only allows a limited number of requests/hour for non-authenti
   GithubPublisher.setRepositoryOwner(owner)
   ```
 
-### Usage
+### Example
 
 ```typescript
 import GithubPublisher from "@teleporthq/teleport-publisher-github"
@@ -683,7 +682,7 @@ You can use the Zip publisher without providing an output path and only get a `B
   ZipPublisher.setOutputZipName(zipName)
   ```
 
-### Usage
+### Example
 
 ```typescript
 import ZipPublisher from "@teleporthq/teleport-publisher-zip"
@@ -809,7 +808,7 @@ interface DiskFactoryParams {
   DiskPublisher.setOutputPath(path)
   ```
 
-### Usage
+### Example
 
 ```typescript
 import DiskPublisher from "@teleporthq/teleport-publisher-disk"

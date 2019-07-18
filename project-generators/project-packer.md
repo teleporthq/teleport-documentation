@@ -1,6 +1,6 @@
 # Project Packer
 
-The project packer as a bundle that encapsulates a project generator together with a [publisher](/project-generators/publishers.html) and executes in a pipeline all the necessary steps so as to have a working project.
+The project packer is a bundle that encapsulates a project generator together with a [publisher](/project-generators/publishers.html) and executes in a pipeline all the necessary steps so as to have a working project.
 
 ## Arguments
 
@@ -14,16 +14,12 @@ export interface PackerFactoryParams {
 }
 ```
 
-Besides the project generator and the [publisher](/project-generators/publishers.html), in order to assemble a runnable project, the packer makes use of some additional informations.
-
 ## API reference
 
 #### `setPublisher(publisher)`
-
+Sets the publisher for all subsequent calls of the pack function
 - **Arguments:** `(Publisher) publisher`
-
 - **Returns:** `void`
-  - you can set the publisher to the packer before running the actual `pack` method
 - **Usage:**
 
 ```ts
@@ -37,12 +33,10 @@ ProjectPacker.setPublisher(NowPublisher)
 ```
 
 #### `setGenerator(generator)`
-
+Sets the generator for all subsequent calls of the pack function
 - **Arguments:** `(ProjectGenerator) generator`
 - **Returns:** `void`
-
-- you can set the project generator to the packer before running the actual `pack` method
-
+- **Usage:**
 ```ts
 import ProjectPacker from "@teleporthq/teleport-project-packer"
 import ReactNextGenerator from "@teleporthq/teleport"
@@ -51,12 +45,10 @@ ProjectPacker.setGenerator(ReactNextGenerator)
 ```
 
 #### `setAssets(assets)`
-
+Sets the static assets collection for all subsequent calls of the pack function
 - **Arguments:** `(AssetsDefinition) assets`
 - **Returns:** `void`
-
-- you can set the assets to the packer before running the `pack` method
-
+- **Usage:**
 ```ts
 import ProjectPacker from "@teleporthq/teleport-project-packer"
 
@@ -68,12 +60,10 @@ ProjectPacker.setAssets(assets)
 ```
 
 #### `setTemplate(template)`
-
+You can define the template in which the generated pages and components will be injected and set it to the packer before running the main `pack` method
 - **Arguments:** `(GeneratedFolder) template`
 - **Returns:** `void`
-
-- you can define the template in which the generated pages and components will be injected and set it to the packer before running the main `pack` method
-
+- **Usage:**
 ```ts
 import ProjectPacker from "@teleporthq/teleport-project-packer"
 
@@ -85,12 +75,10 @@ ProjectPacker.setTemplate(template)
 ```
 
 #### `loadTemplate(remoteTemplate)`
-
+In case you want to use a remote template (a github repository), you can load it before running the main method
 - **Arguments:** `(RemoteTemplateDefinition) remoteTemplate`
 - **Returns:** `Promise<void>`
-
-- in case you want to use a remote template (a github repository), you can load it before running the main method
-
+- **Usage:**
 ```ts
 import ProjectPacker from "@teleporthq/teleport-project-packer"
 
@@ -105,12 +93,11 @@ await ProjectPacker.loadTemplate(remoteTemplate)
 
 - **Arguments:**
 
-  `(ProjectUIDL) projectUidl`
-
-  `(PackerFactoryParams) packParams`
+  - `(ProjectUIDL) projectUidl`
+  - `(PackerFactoryParams) packParams`
 
 - **Returns:** `Promise<PublisherResponse>`
-  - will have the same return type as the one as the chosen publisher
+  - will have the same return type as the chosen publisher
 - **Usage:**
 
   ```ts
@@ -133,7 +120,7 @@ await ProjectPacker.loadTemplate(remoteTemplate)
   const result = await ProjectPacker.pack(project)
   ```
 
-## Usage
+## Example
 
 ```ts
 import ProjectPacker from "@teleporthq/teleport-project-packer"
@@ -172,7 +159,7 @@ const result = ProjectPacker.pack(project, {
 
 console.log(result)
 ```
-
+Result:
 ```json
 {
   success: true
