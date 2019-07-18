@@ -1,101 +1,12 @@
-# Architecture
+# Core
 
-A project generator converts a [ProjectUIDL](/uidl/#project-uidl) into an in-memory structure of files and folders. 
+A project generator converts a [ProjectUIDL](/uidl/#project-uidl) into an in-memory structure of files and folders. The core package that implements the project generation algorithm is `teleport-project-generator`. This section of the docs is dedicated to explaining the [project generation flow](/project-generators/#project-generation-flow) and specifying [the interface](/project-generators/#api-reference) of the project generator object.
 
-## Project Strategy
 
-The strategy is the parameter of the `createProjectGenerator` factory. The structure will give all the details needed to start the project generation. The detailed interface is called [`ProjectStrategy`](https://github.com/teleporthq/teleport-code-generators/blob/master/packages/teleport-project-generator/src/types.ts#L3) and can be consulted on GitHub. If we were to simplify this interface, the key parts are its required fields. These give you a better understanding of what a project generator does.
-
-```typescript
-interface ProjectStrategy {
-  components: {
-    generator: ComponentGenerator
-    path: string[]
-  }
-  pages: {
-    generator: ComponentGenerator
-    path: string[]
-  }
-  router?: {
-    generator: ComponentGenerator
-    path: string[]
-  }
-  entry: {
-    generator: ComponentGenerator
-    path: string[]
-  }
-  static: {
-    path: string[]
-  }
-}
-```
-
-You can define **component generators** for each separate type of file that a project can generate. You also have to provide a **path** for each type of file. A **path** is defined as an **array of folders** (eg: `["src", "components"]`), the first one being generated directly in the root of the project. An **empty array** means the files will also be generated in the **root**.
-
-Considering this strategy:
-```javascript
-{
-  components: {
-    generator: vueComponentGenerator,
-    path: ["components"],
-  },
-  pages: {
-    generator: vueComponentGenerator,
-    path: ["pages"],
-  },
-  router: {
-    generator: vueRouterComponentGenerator,
-    path: [],
-    fileName: "router"
-  },
-  entry: {
-    generator: htmlEntryGenerator,
-    path: []
-  },
-  static: {
-    path: ["static"]
-  }
-}
-```
-This should be the folder structure at the end of the generation process:
-```
-project
-|--components/
-|----button.js
-|----navbar.js
-|----...
-|--pages/
-|----home.js
-|----about.js
-|----...
-|--static/
-|----manifest.json
-|----favicon.ico
-|----...
-|--router.js
-|--index.html
-|--package.json
-```
-:::tip
-The **router** strategy is optional since some frameworks (next, nuxt) have the routing capability built-in, based on the folder structure of the pages.
-:::
-
-### Components
-
-### Pages
-
-### Routing
-
-### Entry File
-
-### Static Assets
+> UNDER CONSTRUCTION
 
 ## Project Generation Flow
 
-## Project Generator Object
+## Installation and Setup
 
-### Installation and Setup
-
-### API Reference
-
-## Project Templates
+## API Reference

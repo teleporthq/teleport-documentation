@@ -1,17 +1,13 @@
 # Pack and Publish Your Project
 
-> UNDER CONSTRUCTION
-
 When used standalone, a [project generator's](/project-generators/flavors.html) output is an in-memory folder structure. This allows you to run the generator in any environment without depending on the ability to write to the disk.
 
-If you want to have a running app and, you can use the [project packer](/project-generators/project-packer.html). Think about the packer as a bundle that encapsulates a project generator together with a [publisher](/project-generators/publishers.html) and executes in a pipeline all the necessary steps so as to have a working project.
+If you want to have a running app and, you can use the [project packer](/project-generators/project-packer.html).
 
 In this tutorial, we'll use the **Next project generator** and the **Now publisher**.
 
-<!-- > UNDER CONSTRUCTION -->
-
 ```
-npm install @teleporthq/teleport-project-generator-next
+npm install @teleporthq/teleport-project-generator-react-next
 npm install @teleporthq/teleport-project-packer
 npm install @teleporthq/teleport-publisher-now
 ```
@@ -20,48 +16,32 @@ To create a `now` publisher, you first need to create a Zeit deploy token from y
 After you have your **zeit deploy token**, you can begin to create the packer and pack your project:
 
 ```js
-import { createReactNextGenerator } from "@teleporthq/teleport-project-generator-react-next"
-import { createNowPublisher } from "@teleport/teleport-publisher-now"
-
-import { createProjectPacker } from "@teleport/teleport-project-packer"
+import ProjectPacker from "@teleport/teleport-project-packer"
+import ReactNextGenerator from "@teleporthq/teleport-project-generator-react-next"
+import NowPublisher from "@teleport/teleport-publisher-now"
 
 const ZEIT_TOKEN = "YOUR_ZEIT_DEPLOY_HERE"
-
-const projectUidl = {
+const projectUidl: ProjectUIDL = {
   /* ... */
 }
 
-// Create the Now publisher
-const publisher = createNowPublisher({
-  deployToken: ZEIT_TOKEN
-})
+NowPublisher.setAccessToken(ZEIT_TOKEN)
 
-// Create the project generator
-const generatorFactory = createReactNextGenerator()
-const { generateProject } = generatorFactory
+ProjectPacker.setPublisher(NowPublisher)
+ProjectPacker.setGenerator(ReactNextGenerator)
 
-// Create the packer
-const packer = createProjectPacker({
-  publisher,
-  generatorFunction: generateProject
-})
-
-// Pack the project
-const result = await packer.pack(projectUidl)
+const result = await ProjectPacker.pack(projectUidl)
 
 console.log(result)
 ```
 
 The result will be an object of type `PublisherResponse`
 
-```js
-```
-
 Sample output:
 
 ```js
 {
-  success: true,
-  payload: 'test'
+  success: true
+  payload: "https://teleport-project-template-react-next.now.sh"
 }
 ```

@@ -38,10 +38,10 @@ module.exports = {
         children: [
           "component-generators/",
           "component-generators/flavors",
+          "component-generators/features",
           "component-generators/mappings",
           "component-generators/plugins",
-          "component-generators/post-processors",
-          "component-generators/api-reference"
+          "component-generators/post-processors"
         ]
       },
       {
@@ -49,6 +49,8 @@ module.exports = {
         children: [
           "project-generators/",
           "project-generators/flavors",
+          "project-generators/project-strategy",
+          "project-generators/project-template",
           "project-generators/project-packer",
           "project-generators/publishers"
         ]
