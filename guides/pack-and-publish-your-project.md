@@ -7,7 +7,7 @@ If you want to have a running app and, you can use the [project packer](/project
 In this tutorial, we'll use the **Next project generator** and the **Now publisher**.
 
 ```
-npm install @teleporthq/teleport-project-generator-next
+npm install @teleporthq/teleport-project-generator-react-next
 npm install @teleporthq/teleport-project-packer
 npm install @teleporthq/teleport-publisher-now
 ```
