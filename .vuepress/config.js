@@ -7,7 +7,10 @@ module.exports = {
     "@vuepress/pwa": {
       serviceWorker: true,
       updatePopup: true
-    }
+    },
+    '@vuepress/google-analytics': {
+      'ga': 'UA-116252748-3'
+    },
   },
   evergreen: true,
   themeConfig: {
