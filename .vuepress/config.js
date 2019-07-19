@@ -49,6 +49,7 @@ module.exports = {
         children: [
           "project-generators/",
           "project-generators/flavors",
+          "project-generators/features",
           "project-generators/project-strategy",
           "project-generators/project-template",
           "project-generators/project-packer",
