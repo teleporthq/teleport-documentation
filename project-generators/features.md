@@ -10,7 +10,7 @@ Here's a quick reference to all the features that are supported by project gener
 | custom meta        |          -          |         -        |       -       |       -       |
 | router file        |       index.js      |        n/a       |   router.js   |      n/a      |
 | navlink            | Link - react-router | Link - next/link |  router-link  |   nuxt-link   |
-| entry file         |      index.html     |   _document.js   |   index.html  |   index.html  |
+| entry file         |      index.html     |   _document.js   |   index.html  |   app.html    |
 | global meta/assets |          x          |         x        |       x       |       x       |
 | web manifest file  |    manifest.json    |   manifest.json  | manifest.json | manifest.json |
 | package.json       |          x          |         x        |       x       |       x       |
