@@ -39,9 +39,9 @@ Sets the generator for all subsequent calls of the pack function
 - **Usage:**
 ```ts
 import ProjectPacker from "@teleporthq/teleport-project-packer"
-import ReactNextGenerator from "@teleporthq/teleport"
+import NextGenerator from "@teleporthq/teleport-project-generator-next"
 
-ProjectPacker.setGenerator(ReactNextGenerator)
+ProjectPacker.setGenerator(NextGenerator)
 ```
 
 #### `setAssets(assets)`
@@ -103,7 +103,7 @@ await ProjectPacker.loadTemplate(remoteTemplate)
   ```ts
   import ProjectPacker from "@teleporthq/teleport-project-packer"
   import NowPublisher from "@teleporthq/teleport-publisher-now"
-  import ReactNextGenerator from "@teleporthq/teleport"
+  import NextGenerator from "@teleporthq/teleport-project-generator-next"
 
   const projectUidl: ProjectUIDL = {
     /* ... */
@@ -114,7 +114,7 @@ await ProjectPacker.loadTemplate(remoteTemplate)
   NowPublisher.setAccessToken(deployToken)
 
   // # Setup the packer
-  ProjectPacker.setGenerator(ReactNextGenerator)
+  ProjectPacker.setGenerator(NextGenerator)
   ProjectPacker.setPublisher(NowPublisher)
 
   const result = await ProjectPacker.pack(project)
@@ -125,7 +125,7 @@ await ProjectPacker.loadTemplate(remoteTemplate)
 ```ts
 import ProjectPacker from "@teleporthq/teleport-project-packer"
 import NowPublisher from "@teleporthq/teleport-publisher-now"
-import ReactNextGenerator from "@teleporthq/teleport"
+import NextGenerator from "@teleporthq/teleport-project-generator-next"
 
 const projectUidl: ProjectUIDL = {
   /* ... */
@@ -138,7 +138,7 @@ const assets: AssetsDefinition = {
 const remoteTemplateDefinition: RemoteTemplateDefinition = {
   provider: "github",
   username: "teleporthq",
-  repo: "teleport-project-template-react-next",
+  repo: "teleport-project-template-next",
   auth: {
     token: "YOUR_GITHUB_TOKEN"
   }
@@ -149,7 +149,7 @@ const deployToken = "YOUR_DEPLOY_TOKEN_HERE"
 NowPublisher.setAccessToken(deployToken)
 
 // # Setup the packer
-ProjectPacker.setGenerator(ReactNextGenerator)
+ProjectPacker.setGenerator(NextGenerator)
 ProjectPacker.setPublisher(NowPublisher)
 
 const result = ProjectPacker.pack(project, {
@@ -163,6 +163,6 @@ Result:
 ```json
 {
   success: true
-  payload: "https://teleport-project-template-react-next.now.sh"
+  payload: "https://teleport-project-template-next.now.sh"
 }
 ```

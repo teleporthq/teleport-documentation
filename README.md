@@ -41,7 +41,7 @@ The UIDL format is intended to be an intermediary format between creation tools 
 
 Although at the beginning the role of the UIDL seemed to be limited to describing the UI elements and their relationship, we are now confident that we can use it also to describe user interactions, flows, events, and more complicated UI patterns based on component architectures and dynamic data driven applications.
 
-For more details, [jump to the UIDL section of the docs](/uidl/).
+For more details, [jump to the UIDL section of the docs](/uidl/strucure.html).
 
 ### Code Generators
 
