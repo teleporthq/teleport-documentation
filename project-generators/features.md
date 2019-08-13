@@ -1,7 +1,7 @@
 # Features
 Here's a quick reference to all the features that are supported by project generators and a quick explanation for the specific implementation in each framework flavor:
 
-|                    |     react-basic     |    react-next    |   vue-basic   |    vue-nuxt   |
+|                    |        react        |       next       |      vue      |      nuxt     |
 |--------------------|:-------------------:|:----------------:|:-------------:|:-------------:|
 | comp generator     |        react        |       react      |      vue      |      vue      |
 | page generator     |        react        |       react      |      vue      |      vue      |

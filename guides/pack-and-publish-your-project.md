@@ -6,8 +6,14 @@ If you want to have a running app and, you can use the [project packer](/project
 
 In this tutorial, we'll use the **Next project generator** and the **Now publisher**.
 
+:::tip
+There are [multiple publishers available](/project-generators/publishers.html), part of the **teleportHQ** ecosystem. The setup is similar and you can find the [complete API documentation](/project-generators/publishers.html) in the corresponding section of the docs.
+:::
+
+Now, let's start our project packer setup. First, install the dependencies: the **project generator**, the **project-packer** package as well as the **now** publisher.
+
 ```
-npm install @teleporthq/teleport-project-generator-react-next
+npm install @teleporthq/teleport-project-generator-next
 npm install @teleporthq/teleport-project-packer
 npm install @teleporthq/teleport-publisher-now
 ```
@@ -17,7 +23,7 @@ After you have your **zeit deploy token**, you can begin to create the packer an
 
 ```js
 import ProjectPacker from "@teleport/teleport-project-packer"
-import ReactNextGenerator from "@teleporthq/teleport-project-generator-react-next"
+import NextGenerator from "@teleporthq/teleport-project-generator-next"
 import NowPublisher from "@teleport/teleport-publisher-now"
 
 const ZEIT_TOKEN = "YOUR_ZEIT_DEPLOY_HERE"
@@ -28,7 +34,7 @@ const projectUidl: ProjectUIDL = {
 NowPublisher.setAccessToken(ZEIT_TOKEN)
 
 ProjectPacker.setPublisher(NowPublisher)
-ProjectPacker.setGenerator(ReactNextGenerator)
+ProjectPacker.setGenerator(NextGenerator)
 
 const result = await ProjectPacker.pack(projectUidl)
 
@@ -42,6 +48,6 @@ Sample output:
 ```js
 {
   success: true
-  payload: "https://teleport-project-template-react-next.now.sh"
+  payload: "https://teleport-project-template-next.now.sh"
 }
 ```

@@ -31,7 +31,7 @@ module.exports = {
       },
       {
         title: "UIDL",
-        children: ["uidl/", "uidl/examples", "uidl/support"]
+        children: ["uidl/", "uidl/structure", "uidl/examples", "uidl/support"]
       },
       {
         title: "Component Generators",

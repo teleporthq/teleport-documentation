@@ -1,11 +1,16 @@
 # Publishers
 
-A publisher is an utility package that takes as input the [custom format](../guides/generate-your-first-project.html) result of a project generator and helps you get a running application faster, by:
+A publisher is an utility package that takes as input the [custom format](../guides/generate-your-first-project.html) result of a project generator and helps you get a running application faster, either by:
 
-- deploying it on **Zeit** or **Netlify**
-- creating a **zip** file containing the entire project
-- writing the project files to a **disk** path of your choice
-- pushing the project files to a new or an existing **github** repository
+- **deploying** the running app on 3rd party services like *Now* or *Netlify*
+- **exporting** the code directly in the *browser*, on the *disk*, or pushing it to a *remote* location.
+
+The official `teleport` publishers are described in this section:
+* [Now](/project-generators/publishers.html#now)
+* [Netlify](/project-generators/publishers.html#netlify)
+* [GitHub](/project-generators/publishers.html#github)
+* [Zip](/project-generators/publishers.html#zip)
+* [Disk](/project-generators/publishers.html#disk)
 
 Each publisher expects the output of a project generator (a `GeneratedFolder` type) as an argument. Additionally, you may be required to provide different input data, depending on what task is your selected publisher supposed to do (authentication metadata, output paths, deploy tokens)
 
@@ -177,7 +182,7 @@ Sample output:
 ```json
 {
   success: true
-  payload: "https://teleport-project-template-react-next.now.sh"
+  payload: "https://teleport-project-template-next.now.sh"
 }
 ```
 
@@ -297,7 +302,7 @@ Sample output:
 ```json
 {
   success: true
-  payload: "https://teleport-project-template-react-next.netlify.com"
+  payload: "https://teleport-project-template-next.netlify.com"
 }
 ```
 
