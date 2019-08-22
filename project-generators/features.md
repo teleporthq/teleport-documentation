@@ -6,8 +6,7 @@ Here's a quick reference to all the features that are supported by project gener
 | comp generator     |        react        |       react      |      vue      |      vue      |
 | page generator     |        react        |       react      |      vue      |      vue      |
 | page name routing  |         n/a         |         x        |      n/a      |       x       |
-| custom title       |          -          |         -        |       -       |       -       |
-| custom meta        |          -          |         -        |       -       |       -       |
+| custom title/meta  |      \<Helmet\>     |      \<Head\>    |   vue-meta    |    vue-meta   |
 | router file        |       index.js      |        n/a       |   router.js   |      n/a      |
 | navlink            | Link - react-router | Link - next/link |  router-link  |   nuxt-link   |
 | entry file         |      index.html     |   _document.js   |   index.html  |   app.html    |
