@@ -43,8 +43,8 @@ To use the pre-configured component generators you have to create your generator
 import ReactGenerator from '@teleporthq/teleport-component-generator-react'
 
 const uidl = { ... } // your sample here
-
-const { files } = await ReactGenerator.generateComponent(uidl)
+const generator = ReactGenerator.createReactComponentGenerator();
+const { files } = await generator.generateComponent(uidl)
 console.log(files[0].content)
 ```
 The console output will be something like:
@@ -63,8 +63,8 @@ For the `Vue` generator, just switch the package:
 import VueGenerator from '@teleporthq/teleport-component-generator-vue'
 
 const uidl = { ... } // your sample here
-
-const { files } = await VueGenerator.generateComponent(uidl)
+const generator = VueGenerator.createVueComponentGenerator();
+const { files } = await generator.generateComponent(uidl)
 console.log(files[0].content)
 ```
 The console output will be something like:
