@@ -13,7 +13,7 @@ yarn add @teleporthq/teleport-component-generator-react
 yarn add @teleporthq/teleport-component-generator-vue
 ```
 
-For generating a simple component, you have to start from a **component UIDL**:
+For generating a component, you have to start from a **component UIDL**:
 
 ```json
 {
@@ -37,7 +37,7 @@ For generating a simple component, you have to start from a **component UIDL**:
 You can play with the UIDL structure on the [online REPL](https://repl.teleporthq.io/)
 :::
 
-Using the pre-configured component generators is as easy as calling an *async* function:
+To use the pre-configured component generators you have to create your generator instance and call the `generateComponent` *async* function:
 
 ```javascript
 import ReactGenerator from '@teleporthq/teleport-component-generator-react'

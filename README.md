@@ -33,7 +33,7 @@ Like others before us, we decided to work on a **universal format** that could d
 - transition from one code output to another without effort
 - enable efficient and advanced programmatic manipulation
 
-We have named our universal format **"User Interface Definition Language" (UIDL)**. It is represented by a human-readable JSON document, a format supported natively by many programming languages, and easy to manipulate.
+We have named our universal format **"User Interface Definition Language" (UIDL)**. It is represented by a human-readable JSON document, a format supported natively by many programming languages.
 
 :::warning
 The UIDL format is intended to be an intermediary format between creation tools and the teleport code generators. While the JSON format is editable and writable by humans, this is not the intended use.

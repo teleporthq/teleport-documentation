@@ -2,7 +2,7 @@
 
 ## JSON Schema
 
-The **UIDL** format is enforced by [JSON Schema](https://json-schema.org/), an open format that adds constraints, rules and types on a simple JSON structure. Each UIDL has a `$schema` reference at the root level, based on which we perform the structural and type validation.
+The **UIDL** format is enforced by [JSON Schema](https://json-schema.org/), an open format that adds constraints, rules and types on top of a JSON structure. Each UIDL has a `$schema` reference at the root level, based on which we perform the structural and type validation.
 
 You can find the corresponding JSON Schema objects for the **component** and for the **project** UIDLs here:
 

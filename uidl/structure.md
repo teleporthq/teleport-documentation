@@ -153,10 +153,10 @@ In this case, the content can have the following fields:
 - `dependency` - adds information about the element if it is a custom component or something used from an external package
 - `style` - defines the visual aspect of the element, with css-like properties. Each key is the name of the attribute, each value is of type `static`, `dynamic` or `nested-style`. The UIDLNestedStyleNode is specific here because of the way in which styles are parsed by the generators.
 - `attrs` - defines any properties/attributes added on this element. For custom elements, the attributes will be translated into dynamic values inside. Each key is the
-- `events` - defines a list of simple instructions that can be added on event handlers. This is an experimental feature and has limited capabilities for now.
+- `events` - defines a list of instructions that can be added on event handlers. This is an experimental feature and has limited capabilities for now.
 - `children` - is the array of `UIDLNode` objects that this element surrounds. Using this field, we ensure the tree-like structure of the entire component.
 
-This is how you define a simple image `element`:
+This is how you define an image `element`:
 
 ```json
 {
@@ -248,7 +248,7 @@ The content node contains:
 - `value` - the value of the dynamic reference for which the `node` is displayed
 - `condition` - the explicit conditional expression based on which the `node` is displayed
 
-The conditional node will either use the `value` and make a simple equality (===) between the `reference` and the `value`, or can use the `condition`, which allows for more complex conditionals, using all the available binary and unary operators.
+The conditional node will either use the `value` and make an equality (===) between the `reference` and the `value`, or can use the `condition`, which allows for more complex conditionals, using all the available binary and unary operators.
 
 A condition like:
 
@@ -268,7 +268,7 @@ will render into:
 reference > 3 && reference <= 5
 ```
 
-In the following example, you can see a simple conditional node, based on the `true`/`false` value of a `state` key.
+In the following example, you can see a conditional node, based on the `true`/`false` value of a `state` key.
 
 ```json
 {
@@ -344,7 +344,7 @@ The content allows the following fields:
 * `meta.iteratorName` - a string which overrides the name of the variable inside the iteration (default: `item`)
 * `meta.dataSourceIdentifier` - a string which identifies the local data source variable inside the component. This is used only when you are passing a static array as a dataSource and the framework needs to declare that array as a local variable (ex: Vue will place this on the `data` object)
 
-A simple repeat over an array retrieved from `props`:
+A repeat over an array retrieved from `props`:
 
 ```json
 {
@@ -740,7 +740,7 @@ specific to that node type in the content key:
 }
 ```
 
-A simple hello world message could be written like this:
+A "hello world" message could be written like this:
 
 ```json
 {
@@ -820,7 +820,7 @@ Styles and attributes can receive very similar values. They both accept nodes of
 
 #### Component element with dependencies
 
-Simply adding primitive elements like containers and images is not enough to build more complex visual user interfaces. Sometimes we might want to rely on a third party package for a specific component, or we want to define the components ourselves and reuse them in multple place.
+Adding primitive elements like containers and images is not enough to build more complex visual user interfaces. Sometimes we might want to rely on a third party package for a specific component, or we want to define the components ourselves and reuse them in multple place.
 
 In order to do so we have the **dependency** key option which will allow us to specify what import statements need to appear in the component that uses instances of a given element.
 

@@ -17,7 +17,7 @@ You can play with the different code ouputs in our [online REPL](https://repl.te
 
 The `teleport-component-generator-react` package loads all the different style plugins and allows you to pick the preferred styling via a input parameter called `variation`.
 
-The bulk of the package is this simple function that configures the generator:
+The bulk of the package is this function that configures the generator:
 
 ```typescript
 const stylePlugins = {

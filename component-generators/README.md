@@ -114,7 +114,7 @@ Let's consider the following basic UIDL structure of a component:
 
 We would like to generate something similar to the React or Vue components seen in the generated content tabs of the example above.
 
-While this example is simple, it allows us to introduce the concept of mapping of content. Let's consider the following question:
+While this example is very basic, it allows us to introduce the concept of mapping of content. Let's consider the following question:
 
 **How do we decide to transform `text` to `span`?**
 
@@ -158,7 +158,7 @@ The concept of element mapping comes from the need to generate code specific to 
 
 For example, a static text content needs to be wrapped into a `<span>` in react or vue, but for react native we need a `<Text>` tag.
 
-In a similar way, a link between two pages the application is defined by a NextLink, a RouterLink, or simple `<a>` depending on the implementaion of the target generators.
+In a similar way, a link between two pages the application is defined by a NextLink, a RouterLink, or a standard anchor tag `<a>`, depending on the implementaion of the target generators.
 
 One of the first steps we need to supply to a generator is a way of mapping generic nodes to specific implmenetation dependend ones.
 
