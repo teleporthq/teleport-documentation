@@ -114,7 +114,7 @@ An example of using a dynamic `prop` in an attribute:
     "content": {
       "elementType": "image",
       "attrs": {
-        "url": {
+        "src": {
           "type": "dynamic",
           "content": {
             "referenceType": "prop",
@@ -190,7 +190,7 @@ Notice the composition pattern between two elements.
           "content": {
             "elementType": "image",
             "attrs": {
-              "url": {
+              "src": {
                 "type": "static",
                 "content": "path/to/avatar/url"
               }
