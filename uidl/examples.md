@@ -37,7 +37,7 @@ export default Message
 If you want to build your own UIDL starting from this examples and see the output in real time, check out the online [component playground](https://repl.teleporthq.io/).
 
 :::tip
-The UIDL element types (ex: container, text, image, etc.) are platform indepentent and can represent any kind of interface, not being locked-in for web interfaces.
+The UIDL element types (ex: container, text, image, etc.) are platform independent and can represent any kind of interface, not being locked-in for web interfaces.
 :::
 
 ## Referencing Dynamic Values
