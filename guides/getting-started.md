@@ -40,11 +40,11 @@ You can play with the UIDL structure on the [online REPL](https://repl.teleporth
 To use the pre-configured component generators you have to create your generator instance and call the `generateComponent` *async* function:
 
 ```javascript
-import ReactGenerator from '@teleporthq/teleport-component-generator-react'
+import { createReactComponentGenerator } from '@teleporthq/teleport-component-generator-react'
 
 const uidl = { ... } // your sample here
-
-const { files } = await ReactGenerator.generateComponent(uidl)
+const generator = createReactComponentGenerator();
+const { files } = await generator.generateComponent(uidl)
 console.log(files[0].content)
 ```
 The console output will be something like:
@@ -60,11 +60,11 @@ export default MyFirstComponent
 
 For the `Vue` generator, just switch the package:
 ```javascript
-import VueGenerator from '@teleporthq/teleport-component-generator-vue'
+import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
 
 const uidl = { ... } // your sample here
-
-const { files } = await VueGenerator.generateComponent(uidl)
+const generator = createVueComponentGenerator();
+const { files } = await generator.generateComponent(uidl)
 console.log(files[0].content)
 ```
 The console output will be something like:

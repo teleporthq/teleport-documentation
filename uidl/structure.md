@@ -164,7 +164,7 @@ This is how you define an image `element`:
   "content": {
     "elementType": "image",
     "attrs": {
-      "src": "path/to/avatar.jpg"
+      "url": "path/to/avatar.jpg"
     }
   }
 }
