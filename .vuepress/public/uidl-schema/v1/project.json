@@ -71,10 +71,10 @@
             "additionalProperties": false,
             "required": ["type"],
             "properties": {
-              "type": { "type": "string", "enum": ["link", "script", "font", "icon", "style"] },
+              "type": { "type": "string", "enum": ["link", "script", "font", "icon", "style", "canonical"] },
               "path": { "type": "string" },
               "content": { "type": "string" },
-              "meta": { "type": "object" }
+              "options": { "type": "object" }
             }
           }
         },
