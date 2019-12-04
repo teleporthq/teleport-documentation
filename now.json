@@ -1,10 +1,7 @@
 {
-    "name": "docs",
+    "name": "documentation",
     "version": 2,
-    "scope": "teleport-dev",
-    "alias": [
-        "docs.teleporthq.io"
-    ],
+    "scope": "teleport-team",
     "builds": [
         {
             "src": "package.json",
