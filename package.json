@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "vuepress": "^1.0.1",
-    "@vuepress/plugin-google-analytics": "next"
+    "vuepress": "^1.2.0",
+    "vuepress-plugin-google-tag-manager": "^0.0.3"
   }
 }

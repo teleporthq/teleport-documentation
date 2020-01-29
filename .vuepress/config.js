@@ -8,9 +8,9 @@ module.exports = {
       serviceWorker: true,
       updatePopup: true
     },
-    '@vuepress/google-analytics': {
-      'ga': 'UA-116252748-3'
-    },
+    "vuepress-plugin-google-tag-manager": {
+      gtm: "GTM-5HFFGVX"
+    }
   },
   evergreen: true,
   themeConfig: {
