@@ -14,7 +14,10 @@ module.exports = {
   },
   evergreen: true,
   themeConfig: {
-    nav: [{ text: "REPL", link: "https://repl.teleporthq.io" }],
+    nav: [
+      { text: "Try our Playground", link: "https://play.teleporthq.io" },
+      { text: "REPL", link: "https://repl.teleporthq.io" }
+    ],
     logo: "/logo.svg",
     sidebar: [
       {
