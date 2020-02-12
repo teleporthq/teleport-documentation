@@ -1,17 +1,28 @@
 module.exports = {
+  head: [
+    ["link", { rel: "icon", href: "/icons/icon-96x96.png" }],
+    ["link", { rel: "manifest", href: "/manifest.json" }],
+    ["meta", { name: "theme-color", content: "#822cec" }],
+    ["link", { rel: "apple-touch-icon", href: "/icons/icon-152x152.png" }]
+  ],
   title: "teleportHQ Code Generators",
   description:
     "Building the infrastructure for the next generation of web and mobile interfaces",
   dest: "dist",
-  plugins: {
-    "@vuepress/pwa": {
-      serviceWorker: true,
-      updatePopup: true
-    },
-    "vuepress-plugin-google-tag-manager": {
-      gtm: "GTM-5HFFGVX"
-    }
-  },
+  plugins: [
+    [
+      "@vuepress/pwa",
+      {
+        updatePopup: true
+      }
+    ],
+    [
+      "vuepress-plugin-google-tag-manager",
+      {
+        gtm: "GTM-5HFFGVX"
+      }
+    ]
+  ],
   evergreen: true,
   themeConfig: {
     nav: [
