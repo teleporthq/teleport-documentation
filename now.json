@@ -1,12 +1,5 @@
 {
-    "name": "documentation",
-    "version": 2,
-    "scope": "teleport-team",
-    "builds": [
-        {
-            "src": "package.json",
-            "use": "@now/static-build"
-        }
-    ],
-    "public": true
+  "version": 2,
+  "scope": "teleport-team",
+  "public": true
 }
