@@ -78,10 +78,6 @@ module.exports = {
           "community/contributors",
         ],
       },
-      {
-        title: "Team",
-        children: ["team/", "team/vision"],
-      },
     ],
     sidebarDepth: 3,
     displayAllHeaders: false,
