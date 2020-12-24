@@ -5,12 +5,14 @@ A component generator converts a [ComponentUIDL](/uidl/#component-uidl) into a l
 The first major area of responsability is the generation of one single component entity, with all the complexities and particularities that it presents.
 
 Component generation could be broken into the following high level steps:
+
 - creation of the generator function via a factory provided by our packages or by user configuration
 - passing of json data to the created function
 - component uidl data parsing and validation
 - generator function execution
 
 The execution of the component generator function can be borken down into the following steps:
+
 - resolving generic UIDL content into framework specific content
 - creation of a basic component entity in the form of one or more abstract syntax trees
 - running a sequence of additional operation over the abstract syntax trees from the base component
@@ -25,7 +27,7 @@ The [UIDL](/#uidl) is the intermediary data format we use to represent structure
 A component generator takes in the data (the UIDL) for a component and outputs the resulting code as a string.
 
 ```js
-udilDataContent => someStringResult;
+(udilDataContent) => someStringResult;
 ```
 
 In other words, component generators are functions that receive UIDL data and returns code content. But this is not enough. We need a bit more information about the component apart from the genereated code. What happens if:
@@ -66,8 +68,8 @@ const generateComponent: GenerateComponentFunction = async (
   return {
     files: [],
     dependencies: {},
-  }
-}
+  };
+};
 ```
 
 If we would like to return a **Hello World** javascript file without anything we could:
@@ -94,7 +96,6 @@ Let's consider the following basic UIDL structure of a component:
 
 ```json
 {
-  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "Message",
   "node": {
     "type": "element",
@@ -126,7 +127,6 @@ The resolver also transforms attributes of generic nodes:
 
 ```json
 {
-  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ImageElement",
   "node": {
     "type": "element",
@@ -168,12 +168,12 @@ Mappings are added to the core resolver class instances. This object is used by 
 const myMapping = {
   elements: {
     container: {
-      elementType: "div"
-    }
+      elementType: "div",
+    },
   },
   events: {
-    click: "onclick"
-  }
+    click: "onclick",
+  },
 };
 
 const resolver = new Resolver();
@@ -184,9 +184,9 @@ const resolvedUIDL = resolver.resolveUIDL(
     node: {
       type: "element",
       content: {
-        elementType: "container"
-      }
-    }
+        elementType: "container",
+      },
+    },
   },
   options
 );

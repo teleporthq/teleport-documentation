@@ -1,14 +1,5 @@
 # Support
 
-## JSON Schema
-
-The **UIDL** format is enforced by [JSON Schema](https://json-schema.org/), an open format that adds constraints, rules and types on top of a JSON structure. Each UIDL has a `$schema` reference at the root level, based on which we perform the structural and type validation.
-
-You can find the corresponding JSON Schema objects for the **component** and for the **project** UIDLs here:
-
-- [Component UIDL](/uidl-schema/v1/component.json)
-- [Project UIDL](/uidl-schema/v1/project.json)
-
 ## TypeScript Interfaces
 
 :::tip
@@ -19,31 +10,40 @@ Here are the interfaces for components and projects:
 
 ```typescript
 interface ComponentUIDL {
-  $schema?: string
-  name: string
-  node: UIDLNode
-  meta?: Record<string, any>
-  propDefinitions?: Record<string, UIDLPropDefinition>
-  stateDefinitions?: Record<string, UIDLStateDefinition>
+  name: string;
+  node: UIDLElementNode;
+  styleSetDefinitions?: Record<string, UIDLStyleSetDefinition>;
+  propDefinitions?: Record<string, UIDLPropDefinition>;
+  importDefinitions?: Record<string, UIDLExternalDependency>;
+  peerDefinitions?: Record<string, UIDLPeerDependency>;
+  stateDefinitions?: Record<string, UIDLStateDefinition>;
+  outputOptions?: UIDLComponentOutputOptions;
+  designLanguage?: {
+    tokens?: UIDLDesignTokens;
+  };
+  seo?: UIDLComponentSEO;
 }
 ```
 
 ```typescript
 interface ProjectUIDL {
-  $schema?: string
-  name: string
+  name: string;
   globals: {
     settings: {
-      title: string
-      language: string
-    }
-    meta: Array<Record<string, string>>
-    assets: GlobalAsset[]
-    manifest?: WebManifest
-    variables?: Record<string, string>
-  }
-  root: ComponentUIDL
-  components?: Record<string, ComponentUIDL>
+      title: string;
+      language: string;
+    };
+    customCode?: {
+      head?: string;
+      body?: string;
+    };
+    meta: Array<Record<string, string>>;
+    assets: UIDLGlobalAsset[];
+    manifest?: WebManifest;
+    variables?: Record<string, string>;
+  };
+  root: ComponentUIDL;
+  components?: Record<string, ComponentUIDL>;
 }
 ```
 
