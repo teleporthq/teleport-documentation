@@ -150,7 +150,63 @@ As you can see in the example above, the `url` attribute becomes a `src` for the
 
 ## Validation
 
-> UNDER CONSTRUCTION
+Validation of `ComponentUIDL` and `ProjectUIDL` happens against [VComponentUIDL](https://github.com/teleporthq/teleport-code-generators/blob/faa44cd0b8a4cc237bc80ec9c3410483b7630dc9/packages/teleport-types/src/vuidl.ts#L114)
+and [VProjectUIDL](https://github.com/teleporthq/teleport-code-generators/blob/faa44cd0b8a4cc237bc80ec9c3410483b7630dc9/packages/teleport-types/src/vuidl.ts#L119)
+using a runtime type-checker.
+
+UIDL's are designed to be user-friendly and therefore [Resolvers](http://localhost:8080/component-generators/#resolver) will take care of resolving the nodes
+into a code-generators understandable version of UIDL. So, we are exposing two types of **typescript** types.
+The types they are appended with **V** like `VComponentUIDL`, `VProjectUIDL`, `VUIDLElementNode` can be used to type-check UIDL.
+
+These are validated and then resolved into `ComponentUIDL`, `ProjectUIDL` and `UIDLElementNode` respectively.
+
+### Component and Project Validators
+
+These are used to validate both `component` and `project` UIDL.
+
+```typescript
+import { Validator } from "@teleporthq/teleport-uidl-validator";
+
+const validator = new Validator();
+const schemaValidationResult = validator.validateComponentSchema(input);
+const { componentUIDL, valid } = schemaValidationResult;
+if (valid && componentUIDL) {
+  cleanedUIDL = (componentUIDL as unknown) as Record<string, unknown>;
+} else {
+  throw new Error(schemaValidationResult.errorMsg);
+}
+```
+
+`validateRootComponentSchema` is used to validate **root** `ComponentUIDL` and `validateComponentSchema` is used to validate components.
+When the UIDL's are validated, the validators removes all the additational nodes which are not part of `VComponentUIDL` types.
+
+### Decoders
+
+Decoders are bite-sized validators for all individual nodes in UIDL. For example, we can validate style using `styleValueDecoder` and
+attributes alone can be validated using `attributeValueDecoder`. All the available **Decoders** are available on [GitHub](https://github.com/teleporthq/teleport-code-generators/blob/development/packages/teleport-uidl-validator/src/decoders/utils.ts).
+
+```typescript
+import { Decoders } from "@teleporthq/teleport-uidl-validator";
+
+const staticValue = {
+  type: "static",
+  content: "100px",
+};
+
+const dynamicStyleNode = {
+  type: "dynamic",
+  content: {
+    referenceType: "prop",
+    id: "color",
+  },
+};
+
+const result = Decoders.staticValueDecoder.run(staticValue);
+console.log(result);
+
+const dynamicResult = Decoders.styleValueDecoder.run(dynamicStyleNode);
+console.log(dynamicResult);
+```
 
 ## Resolver
 

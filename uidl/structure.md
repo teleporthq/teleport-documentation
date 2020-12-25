@@ -224,85 +224,6 @@ const ImageElement = (props) => {
 export default ImageElement;
 ```
 
-### Styles
-
-Styles can be defined on [Eelement Node](http://localhost:8080/uidl/structure.html#element-node) using `style` and
-`referencedStyles` attributes.
-
-- style
-
-  ```json
-  {
-    "type": "element",
-    "content": {
-      "elementType": "container",
-      "children": [
-        {
-          "type": "element",
-          "content": {
-            "elementType": "text",
-            "style": {
-              "width": "100px"
-            },
-            "children": [
-              {
-                "type": "static",
-                "content": "World!"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  ```
-
-  `style` attribute is used to define styles that directly reflects on the node.
-
-- referencedStyles
-
-  `referencedStyles` are again divided into two, one is `inlined` and the other is `project-referenced`. The typescript
-  interface for this looke like
-
-  ```typescript
-  type UIDLReferencedStyles = Record<string, UIDLElementNodeReferenceStyles>;
-
-  type UIDLElementNodeReferenceStyles =
-    | UIDLElementNodeProjectReferencedStyle
-    | UIDLElementNodeInlineReferencedStyle;
-  ```
-
-  `Element Node` with `referencedStyles` looks like
-
-  ```json
-  <!-- other UIDLElementNode fields --->
-  "referencedStyles": {
-    "5ed0d3daf36df4da926078e": {
-      "id": "5ed0d3daf36df4da926078e",
-      "type": "style-map",
-      "content": {
-        "mapType": "project-referenced",
-        "referenceId": "5ed0d4923de727e93cb4efa2"
-      }
-    },
-    "5ecfa0d2f9f29ada8482ff03": {
-      "id": "5ecfa0d2f9f29ada8482ff03",
-      "type": "style-map",
-      "content": {
-        "mapType": "inlined",
-        "conditions": [
-          { "conditionType": "element-state", "content": "hover"}
-        ],
-        "styles": {
-          "color": { "type": "static", "content": "red"},
-          "border-bottom": "3px solid red",
-          "padding-bottom": "7px"
-        }
-      }
-    }
-  }
-  <!-- other UIDLElementNode fields --->
-  ```
-
 ### Conditional Node
 
 This node should be used when an UIDLNode should be rendered inside a conditional expression (ex: v-if in Vue).
@@ -538,6 +459,81 @@ This node type is exclusive to arrays of children in element nodes. Because a co
 ```
 
 We plan to handle name slots in the future, but for now only the default slot is supported.
+
+### Styles
+
+Styles can be defined on [Eelement Node](http://localhost:8080/uidl/structure.html#element-node) using `style` and
+`referencedStyles` attributes. `style` attribute is used to define styles that directly reflects on the node. Style can be defined using static node.
+
+```json
+{
+  "type": "element",
+  "content": {
+    "elementType": "container",
+    "children": [
+      {
+        "type": "element",
+        "content": {
+          "elementType": "text",
+          "style": {
+            "width": "100px"
+          },
+          "children": [
+            {
+              "type": "static",
+              "content": "World!"
+            }
+          ]
+        }
+      }
+    ]
+  }
+```
+
+### Referenced Styles
+
+`referencedStyles` are used for defining `media` and `element-state` using `inlined`. Styles from `project-referenced` are refered using
+`project-referenced` flag. More details on how to use and refer styles are mentioned [here](https://github.com/teleporthq/teleport-code-generators/pull/444).
+
+```typescript
+type UIDLReferencedStyles = Record<string, UIDLElementNodeReferenceStyles>;
+
+type UIDLElementNodeReferenceStyles =
+  | UIDLElementNodeProjectReferencedStyle
+  | UIDLElementNodeInlineReferencedStyle;
+```
+
+`Element Node` with `referencedStyles` looks like
+
+```json
+<!-- other UIDLElementNode fields --->
+"referencedStyles": {
+  "5ed0d3daf36df4da926078e": {
+    "id": "5ed0d3daf36df4da926078e",
+    "type": "style-map",
+    "content": {
+      "mapType": "project-referenced",
+      "referenceId": "5ed0d4923de727e93cb4efa2"
+    }
+  },
+  "5ecfa0d2f9f29ada8482ff03": {
+    "id": "5ecfa0d2f9f29ada8482ff03",
+    "type": "style-map",
+    "content": {
+      "mapType": "inlined",
+      "conditions": [
+        { "conditionType": "element-state", "content": "hover"}
+      ],
+      "styles": {
+        "color": { "type": "static", "content": "red"},
+        "border-bottom": "3px solid red",
+        "padding-bottom": "7px"
+      }
+    }
+  }
+}
+<!-- other UIDLElementNode fields --->
+```
 
 ## Component UIDL
 
@@ -1171,7 +1167,71 @@ interface UIDLStyleSetStateCondition {
 
 ## Design Language
 
+From [v0.15.0](https://github.com/teleporthq/teleport-code-generators/releases/tag/v0.15.0) we introduced a new field
+`designLanguage` in **Project UIDL**. We plan to bring all the design realted meta data for projects under this attribute.
+Right now we can define `tokens` which can be used in styles to refer some constant values. Design-language is alo defined
+under [RootComponentUIDL](http://localhost:8080/uidl/structure.html#root-component-uidl).
+
 ### Tokens
+
+Tokens are used to store all the design related constants in a single place. They are converted into `css-variables`
+in plain css flavours and in `css-in-js` they converted into constants. Tokens in **Project UIDL** can be defined under **root**.
+
+```json
+<!-- other fields of ProjectUIDL --->
+"root": {
+  "designLanguage": {
+    "tokens": {
+      "blue-500": {
+        "type": "static",
+        "content": "#9999ff"
+      },
+      "blue-600": {
+        "type": "static",
+        "content": "#6b7db3"
+      },
+      "red-500": {
+        "type": "static",
+        "content": "#ff9999"
+      },
+      "red-300": "#b36b6b",
+      "font-size": 45
+    }
+  }
+}
+<!-- other fields of ProjectUIDL --->
+```
+
+Tokens can be defined using a simple `static-node`. Once defined they can be used for `styles`, `media-queries`, `project-style-sheet`.
+
+```typescript
+type UIDLDesignTokens = Record<string, UIDLStaticValue>;
+```
+
+When referring to a token, We need to use `UIDLStyleSetTokenReference`.
+
+```typescript
+interface UIDLStyleSetTokenReference {
+  type: "dynamic";
+  content: {
+    referenceType: "token";
+    id: string;
+  };
+}
+```
+
+Using tokens in UIDL, The `id` refers to the token-name or the `attr` id of the token. For more details on tokens, pleasee
+refer the pull-request on [GitHub](https://github.com/teleporthq/teleport-code-generators/pull/503).
+
+```json
+"background": {
+  "type": "dynamic",
+  "content": {
+    "referenceType": "token",
+    "id": "blue-600"
+  }
+}
+```
 
 ## Project UIDL
 
