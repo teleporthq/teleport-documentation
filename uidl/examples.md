@@ -6,7 +6,6 @@ The **Component UIDL** starts from two mandatory fields: `name` and `node`. The 
 
 ```json
 {
-  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "Message",
   "node": {
     "type": "element",
@@ -24,14 +23,15 @@ The **Component UIDL** starts from two mandatory fields: `name` and `node`. The 
 ```
 
 When put through a **React** code generator, this will yield:
+
 ```javascript
-import React from 'react'
+import React from "react";
 
 const Message = (props) => {
-  return <span>Hello, World!</span>
-}
+  return <span>Hello, World!</span>;
+};
 
-export default Message
+export default Message;
 ```
 
 If you want to build your own UIDL starting from this examples and see the output in real time, check out the online [component playground](https://repl.teleporthq.io/).
@@ -91,7 +91,6 @@ A parent component can pass prop data to a child via the **attrs** property of t
 
 ```json
 {
-  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ParentComponent",
   "node": {
     "type": "element",
@@ -121,7 +120,6 @@ The component receiving the props is defined below:
 
 ```json{4-11,24-28,34-38}
 {
-  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "AuthorCard",
   "propDefinitions": {
     "authorName": {
@@ -214,4 +212,3 @@ Visit [the style section](/uidl#with-styles-and-attributes) from the UIDL page t
 Project UIDLs tend to be quite big since they define a couple of components + the logic for routing and generating pages.
 
 One example of project UIDL can be found [here](https://github.com/teleporthq/teleport-code-generators/blob/master/examples/uidl-samples/project.json)
-

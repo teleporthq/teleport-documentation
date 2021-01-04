@@ -5,12 +5,14 @@ A component generator converts a [ComponentUIDL](/uidl/#component-uidl) into a l
 The first major area of responsability is the generation of one single component entity, with all the complexities and particularities that it presents.
 
 Component generation could be broken into the following high level steps:
+
 - creation of the generator function via a factory provided by our packages or by user configuration
 - passing of json data to the created function
 - component uidl data parsing and validation
 - generator function execution
 
 The execution of the component generator function can be borken down into the following steps:
+
 - resolving generic UIDL content into framework specific content
 - creation of a basic component entity in the form of one or more abstract syntax trees
 - running a sequence of additional operation over the abstract syntax trees from the base component
@@ -25,7 +27,7 @@ The [UIDL](/#uidl) is the intermediary data format we use to represent structure
 A component generator takes in the data (the UIDL) for a component and outputs the resulting code as a string.
 
 ```js
-udilDataContent => someStringResult;
+(udilDataContent) => someStringResult;
 ```
 
 In other words, component generators are functions that receive UIDL data and returns code content. But this is not enough. We need a bit more information about the component apart from the genereated code. What happens if:
@@ -66,8 +68,8 @@ const generateComponent: GenerateComponentFunction = async (
   return {
     files: [],
     dependencies: {},
-  }
-}
+  };
+};
 ```
 
 If we would like to return a **Hello World** javascript file without anything we could:
@@ -94,7 +96,6 @@ Let's consider the following basic UIDL structure of a component:
 
 ```json
 {
-  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "Message",
   "node": {
     "type": "element",
@@ -126,7 +127,6 @@ The resolver also transforms attributes of generic nodes:
 
 ```json
 {
-  "$schema": "https://docs.teleporthq.io/uidl-schema/v1/component.json",
   "name": "ImageElement",
   "node": {
     "type": "element",
@@ -150,7 +150,63 @@ As you can see in the example above, the `url` attribute becomes a `src` for the
 
 ## Validation
 
-> UNDER CONSTRUCTION
+Validation of `ComponentUIDL` and `ProjectUIDL` happens against [VComponentUIDL](https://github.com/teleporthq/teleport-code-generators/blob/faa44cd0b8a4cc237bc80ec9c3410483b7630dc9/packages/teleport-types/src/vuidl.ts#L114)
+and [VProjectUIDL](https://github.com/teleporthq/teleport-code-generators/blob/faa44cd0b8a4cc237bc80ec9c3410483b7630dc9/packages/teleport-types/src/vuidl.ts#L119)
+using a runtime type-checker.
+
+UIDL's are designed to be user-friendly and therefore [Resolvers](http://localhost:8080/component-generators/#resolver) will take care of resolving the nodes
+into a code-generators understandable version of UIDL. So, we are exposing two types of **typescript** types.
+The types they are appended with **V** like `VComponentUIDL`, `VProjectUIDL`, `VUIDLElementNode` can be used to type-check UIDL.
+
+These are validated and then resolved into `ComponentUIDL`, `ProjectUIDL` and `UIDLElementNode` respectively.
+
+### Component and Project Validators
+
+These are used to validate both `component` and `project` UIDL.
+
+```typescript
+import { Validator } from "@teleporthq/teleport-uidl-validator";
+
+const validator = new Validator();
+const schemaValidationResult = validator.validateComponentSchema(input);
+const { componentUIDL, valid } = schemaValidationResult;
+if (valid && componentUIDL) {
+  cleanedUIDL = (componentUIDL as unknown) as Record<string, unknown>;
+} else {
+  throw new Error(schemaValidationResult.errorMsg);
+}
+```
+
+`validateRootComponentSchema` is used to validate **root** `ComponentUIDL` and `validateComponentSchema` is used to validate components.
+When the UIDL's are validated, the validators removes all the additational nodes which are not part of `VComponentUIDL` types.
+
+### Decoders
+
+Decoders are bite-sized validators for all individual nodes in UIDL. For example, we can validate style using `styleValueDecoder` and
+attributes alone can be validated using `attributeValueDecoder`. All the available **Decoders** are available on [GitHub](https://github.com/teleporthq/teleport-code-generators/blob/development/packages/teleport-uidl-validator/src/decoders/utils.ts).
+
+```typescript
+import { Decoders } from "@teleporthq/teleport-uidl-validator";
+
+const staticValue = {
+  type: "static",
+  content: "100px",
+};
+
+const dynamicStyleNode = {
+  type: "dynamic",
+  content: {
+    referenceType: "prop",
+    id: "color",
+  },
+};
+
+const result = Decoders.staticValueDecoder.run(staticValue);
+console.log(result);
+
+const dynamicResult = Decoders.styleValueDecoder.run(dynamicStyleNode);
+console.log(dynamicResult);
+```
 
 ## Resolver
 
@@ -168,12 +224,12 @@ Mappings are added to the core resolver class instances. This object is used by 
 const myMapping = {
   elements: {
     container: {
-      elementType: "div"
-    }
+      elementType: "div",
+    },
   },
   events: {
-    click: "onclick"
-  }
+    click: "onclick",
+  },
 };
 
 const resolver = new Resolver();
@@ -184,9 +240,9 @@ const resolvedUIDL = resolver.resolveUIDL(
     node: {
       type: "element",
       content: {
-        elementType: "container"
-      }
-    }
+        elementType: "container",
+      },
+    },
   },
   options
 );

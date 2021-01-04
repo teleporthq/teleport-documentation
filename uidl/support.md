@@ -1,13 +1,48 @@
 # Support
 
-## JSON Schema
+## Deprecated nodes
 
-The **UIDL** format is enforced by [JSON Schema](https://json-schema.org/), an open format that adds constraints, rules and types on top of a JSON structure. Each UIDL has a `$schema` reference at the root level, based on which we perform the structural and type validation.
+[Code-Generators](https://github.com/teleporthq/teleport-code-generators) are designed to support old `ComponentUIDL` and `ProjectUIDL`. But, some un-stable nodes
+tend to change, all the details of those un-stable nodes are mentioned here.
 
-You can find the corresponding JSON Schema objects for the **component** and for the **project** UIDLs here:
+### Nested-style Node
 
-- [Component UIDL](/uidl-schema/v1/component.json)
-- [Project UIDL](/uidl-schema/v1/project.json)
+:::warning
+Support for nested-style is dropped after the `v0.13.0` release.
+:::
+
+Styles are css-like properties that are applied directly on the root node of a component.
+With this approach alone you cannot define responsive styles. Using the nested-style node,
+you can define a sub-section instead of a single static / dynamic value for a give style key.
+
+```json
+{
+  "name": "MyNestedStyleElement",
+  "node": {
+    "type": "element",
+    "content": {
+      "elementType": "div",
+      "children": [
+        {
+          "type": "element",
+          "content": {
+            "elementType": "div",
+            "style": {
+              "width": { "type": "static", "content": "100px" },
+              "@media(max-width: 320px)": {
+                "type": "nested-style",
+                "content": {
+                  "width": { "type": "static", "content": "10px" }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
 
 ## TypeScript Interfaces
 
@@ -19,31 +54,40 @@ Here are the interfaces for components and projects:
 
 ```typescript
 interface ComponentUIDL {
-  $schema?: string
-  name: string
-  node: UIDLNode
-  meta?: Record<string, any>
-  propDefinitions?: Record<string, UIDLPropDefinition>
-  stateDefinitions?: Record<string, UIDLStateDefinition>
+  name: string;
+  node: UIDLElementNode;
+  styleSetDefinitions?: Record<string, UIDLStyleSetDefinition>;
+  propDefinitions?: Record<string, UIDLPropDefinition>;
+  importDefinitions?: Record<string, UIDLExternalDependency>;
+  peerDefinitions?: Record<string, UIDLPeerDependency>;
+  stateDefinitions?: Record<string, UIDLStateDefinition>;
+  outputOptions?: UIDLComponentOutputOptions;
+  designLanguage?: {
+    tokens?: UIDLDesignTokens;
+  };
+  seo?: UIDLComponentSEO;
 }
 ```
 
 ```typescript
 interface ProjectUIDL {
-  $schema?: string
-  name: string
+  name: string;
   globals: {
     settings: {
-      title: string
-      language: string
-    }
-    meta: Array<Record<string, string>>
-    assets: GlobalAsset[]
-    manifest?: WebManifest
-    variables?: Record<string, string>
-  }
-  root: ComponentUIDL
-  components?: Record<string, ComponentUIDL>
+      title: string;
+      language: string;
+    };
+    customCode?: {
+      head?: string;
+      body?: string;
+    };
+    meta: Array<Record<string, string>>;
+    assets: UIDLGlobalAsset[];
+    manifest?: WebManifest;
+    variables?: Record<string, string>;
+  };
+  root: ComponentUIDL;
+  components?: Record<string, ComponentUIDL>;
 }
 ```
 
