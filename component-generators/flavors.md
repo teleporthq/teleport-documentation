@@ -1,13 +1,14 @@
 # Flavors
 
-The standard `teleport-component-generator` can be customized with *mappings*, *plugins* and *post-processors*. Each flavor of component generation is just an **instance** of the generic generator with preloaded plugins and post-processors. Additionally, each flavor defins its own **mapping**, corresponding to the particularities of the framework.
+The standard `teleport-component-generator` can be customized with _mappings_, _plugins_ and _post-processors_. Each flavor of component generation is just an **instance** of the generic generator with preloaded plugins and post-processors. Additionally, each flavor defins its own **mapping**, corresponding to the particularities of the framework.
 
 Below you can find the official list of `teleport` component generator packages:
-* [React](/component-generators/flavors.html#react)
-* [Vue](/component-generators/flavors.html#vue)
-* [Angular](/component-generators/flavors.html#angular)
-* [Stencil](/component-generators/flavors.html#stencil)
-* [Preact](/component-generators/flavors.html#preact)
+
+- [React](/component-generators/flavors.html#react)
+- [Vue](/component-generators/flavors.html#vue)
+- [Angular](/component-generators/flavors.html#angular)
+- [Stencil](/component-generators/flavors.html#stencil)
+- [Preact](/component-generators/flavors.html#preact)
 
 :::tip
 You can play with the different code ouputs in our [online REPL](https://repl.teleporthq.io/)
@@ -27,53 +28,56 @@ const stylePlugins = {
   CSSModules: cssModulesPlugin,
   CSS: cssPlugin,
   JSS: reactJSSPlugin,
-}
+};
 
 export const createReactComponentGenerator = (
-  variation: string = 'CSS',
+  variation: string = "CSS",
   mapping: Mapping = {}
 ): ComponentGenerator => {
-  const stylePlugin = stylePlugins[variation] || cssPlugin
+  const stylePlugin = stylePlugins[variation] || cssPlugin;
 
-  const generator = createComponentGenerator()
+  const generator = createComponentGenerator();
 
-  generator.addMapping(reactMapping)
-  generator.addMapping(mapping)
+  generator.addMapping(reactMapping);
+  generator.addMapping(mapping);
 
-  generator.addPlugin(reactComponentPlugin)
-  generator.addPlugin(stylePlugin)
-  generator.addPlugin(propTypesPlugin)
-  generator.addPlugin(importStatementsPlugin)
+  generator.addPlugin(reactComponentPlugin);
+  generator.addPlugin(stylePlugin);
+  generator.addPlugin(propTypesPlugin);
+  generator.addPlugin(importStatementsPlugin);
 
-  generator.addPostProcessor(prettierJS)
+  generator.addPostProcessor(prettierJS);
 
-  return generator
-}
+  return generator;
+};
 ```
 
 #### Install
+
 ```bash
 npm install @teleporthq/teleport-component-generator-react
 ```
+
 or
+
 ```bash
 yarn add @teleporthq/teleport-component-generator-react
 ```
 
 #### Usage
+
 ```javascript
-import { createReactComponentGenerator } from '@teleporthq/teleport-component-generator-react'
+import { createReactComponentGenerator } from "@teleporthq/teleport-component-generator-react";
 
 // other style options: "CSS" - default, "StyledComponents", "StyledJSX", "JSS", "InlineStyles"
-const reactGenerator = createReactComponentGenerator('CSSModules')
+const reactGenerator = createReactComponentGenerator({
+  variation: "CSSModules",
+});
 
-const result = await reactGenerator.generateComponent(uidl)
+const result = await reactGenerator.generateComponent(uidl);
 ```
 
-Additionally, you can pass a `GeneratorOptions` object as a second parameter:
-```javascript
-const reactGenerator = createReactComponentGenerator('CSSModules', { /*...*/ })
-```
+Check `GeneratorOptions` to seee other parameters that can be passed.
 
 ## Vue
 
@@ -82,40 +86,46 @@ In the `teleport-component-generator-vue` there is no style variation, as the ge
 The main file of the package configures the generator:
 
 ```typescript
-export const createVueComponentGenerator = (mapping: Mapping = {}): ComponentGenerator => {
-  const generator = createComponentGenerator()
-  
-  generator.addMapping(vueMapping)
-  generator.addMapping(mapping)
+export const createVueComponentGenerator = (
+  mapping: Mapping = {}
+): ComponentGenerator => {
+  const generator = createComponentGenerator();
 
-  generator.addPlugin(vueComponentPlugin)
-  generator.addPlugin(vueStylePlugin)
-  generator.addPlugin(importStatementsPlugin)
+  generator.addMapping(vueMapping);
+  generator.addMapping(mapping);
 
-  generator.addPostProcessor(prettierJS)
-  generator.addPostProcessor(prettierHTML)
-  generator.addPostProcessor(vueFile)
+  generator.addPlugin(vueComponentPlugin);
+  generator.addPlugin(vueStylePlugin);
+  generator.addPlugin(importStatementsPlugin);
 
-  return generator
-}
+  generator.addPostProcessor(prettierJS);
+  generator.addPostProcessor(prettierHTML);
+  generator.addPostProcessor(vueFile);
+
+  return generator;
+};
 ```
 
 #### Install
+
 ```bash
 npm install @teleporthq/teleport-component-generator-vue
 ```
+
 or
+
 ```bash
 yarn add @teleporthq/teleport-component-generator-vue
 ```
 
 #### Usage
+
 ```javascript
-import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
+import { createVueComponentGenerator } from "@teleporthq/teleport-component-generator-vue";
 
-const vueGenerator = createVueComponentGenerator()
+const vueGenerator = createVueComponentGenerator();
 
-const result = await vueGenerator.generateComponent(uidl)
+const result = await vueGenerator.generateComponent(uidl);
 ```
 
 ## Angular
@@ -125,39 +135,45 @@ The official package for angular components is: `teleport-component-generator-an
 The main file of the package configures the generator:
 
 ```typescript
-export const createAngularComponentGenerator = (mapping: Mapping = {}): ComponentGenerator => {
-  const generator = createComponentGenerator()
+export const createAngularComponentGenerator = (
+  mapping: Mapping = {}
+): ComponentGenerator => {
+  const generator = createComponentGenerator();
 
-  generator.addMapping(mapping)
-  generator.addMapping(angularMapping)
+  generator.addMapping(mapping);
+  generator.addMapping(angularMapping);
 
-  generator.addPlugin(angularComponentPlugin)
-  generator.addPlugin(importStatementsPlugin)
-  generator.addPlugin(stylePlugin)
+  generator.addPlugin(angularComponentPlugin);
+  generator.addPlugin(importStatementsPlugin);
+  generator.addPlugin(stylePlugin);
 
-  generator.addPostProcessor(prettierJS)
-  generator.addPostProcessor(prettierHTML)
+  generator.addPostProcessor(prettierJS);
+  generator.addPostProcessor(prettierHTML);
 
-  return generator
-}
+  return generator;
+};
 ```
 
 #### Install
+
 ```bash
 npm install @teleporthq/teleport-component-generator-angular
 ```
+
 or
+
 ```bash
 yarn add @teleporthq/teleport-component-generator-angular
 ```
 
 #### Usage
+
 ```javascript
-import { createAngularComponentGenerator } from '@teleporthq/teleport-component-generator-angular'
+import { createAngularComponentGenerator } from "@teleporthq/teleport-component-generator-angular";
 
-const angularGenerator = createAngularComponentGenerator()
+const angularGenerator = createAngularComponentGenerator();
 
-const result = await angularGenerator.generateComponent(uidl)
+const result = await angularGenerator.generateComponent(uidl);
 ```
 
 ## Stencil
@@ -167,38 +183,44 @@ The official package for stencil components is: `teleport-component-generator-st
 The main file of the package configures the generator:
 
 ```typescript
-export const createStencilComponentGenerator = (mapping: Mapping = {}): ComponentGenerator => {
-  const generator = createComponentGenerator()
+export const createStencilComponentGenerator = (
+  mapping: Mapping = {}
+): ComponentGenerator => {
+  const generator = createComponentGenerator();
 
-  generator.addMapping(stencilMapping)
-  generator.addMapping(mapping)
+  generator.addMapping(stencilMapping);
+  generator.addMapping(mapping);
 
-  generator.addPlugin(stencilComponentPlugin)
-  generator.addPlugin(stencilStylePlugin)
-  generator.addPlugin(importStatementsPlugin)
+  generator.addPlugin(stencilComponentPlugin);
+  generator.addPlugin(stencilStylePlugin);
+  generator.addPlugin(importStatementsPlugin);
 
-  generator.addPostProcessor(prettierJS)
+  generator.addPostProcessor(prettierJS);
 
-  return generator
-}
+  return generator;
+};
 ```
 
 #### Install
+
 ```bash
 npm install @teleporthq/teleport-component-generator-stencil
 ```
+
 or
+
 ```bash
 yarn add @teleporthq/teleport-component-generator-stencil
 ```
 
 #### Usage
+
 ```javascript
-import { createStencilComponentGenerator } from '@teleporthq/teleport-component-generator-stencil'
+import { createStencilComponentGenerator } from "@teleporthq/teleport-component-generator-stencil";
 
-const stencilGenerator = createStencilComponentGenerator()
+const stencilGenerator = createStencilComponentGenerator();
 
-const result = await stencilGenerator.generateComponent(uidl)
+const result = await stencilGenerator.generateComponent(uidl);
 ```
 
 ## Preact
@@ -212,44 +234,50 @@ const stylePlugins = {
   InlineStyles: inlineStylesPlugin,
   CSSModules: cssModulesPlugin,
   CSS: cssPlugin,
-}
+};
 
-export const createPreactComponentGenerator = (
-  variation: string = 'CSS',
-  mapping: Mapping = {}
-): ComponentGenerator => {
-  const generator = createComponentGenerator()
-  const stylePlugin = stylePlugins[variation] || cssPlugin
+export const createPreactComponentGenerator = ({
+  variation: string = "CSS",
+  mapping: Mapping = {},
+}): ComponentGenerator => {
+  const generator = createComponentGenerator();
+  const stylePlugin = stylePlugins[variation] || cssPlugin;
 
-  generator.addMapping(preactMapping)
-  generator.addMapping(mapping)
+  generator.addMapping(preactMapping);
+  generator.addMapping(mapping);
 
-  generator.addPlugin(preactComponentPlugin)
-  generator.addPlugin(stylePlugin)
-  generator.addPlugin(proptypesPlugin)
-  generator.addPlugin(importStatementsPlugin)
+  generator.addPlugin(preactComponentPlugin);
+  generator.addPlugin(stylePlugin);
+  generator.addPlugin(proptypesPlugin);
+  generator.addPlugin(importStatementsPlugin);
 
-  generator.addPostProcessor(prettierJS)
+  generator.addPostProcessor(prettierJS);
 
-  return generator
-}
+  return generator;
+};
 ```
 
 #### Install
+
 ```bash
 npm install @teleporthq/teleport-component-generator-preact
 ```
+
 or
+
 ```bash
 yarn add @teleporthq/teleport-component-generator-preact
 ```
 
 #### Usage
+
 ```javascript
-import { createPreactComponentGenerator } from '@teleporthq/teleport-component-generator-preact'
+import { createPreactComponentGenerator } from "@teleporthq/teleport-component-generator-preact";
 
 // other style options: "CSS" - default, "InlineStyles"
-const preactGenerator = createPreactComponentGenerator('CSSModules')
+const preactGenerator = createPreactComponentGenerator({
+  variation: "CSSModules",
+});
 
-const result = await preactGenerator.generateComponent(uidl)
+const result = await preactGenerator.generateComponent(uidl);
 ```
