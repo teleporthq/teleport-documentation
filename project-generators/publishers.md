@@ -2,15 +2,16 @@
 
 A publisher is an utility package that takes as input the [custom format](../guides/generate-your-first-project.html) result of a project generator and helps you get a running application faster, either by:
 
-- **deploying** the running app on 3rd party services like *Now* or *Netlify*
-- **exporting** the code directly in the *browser*, on the *disk*, or pushing it to a *remote* location.
+- **deploying** the running app on 3rd party services like _Now_ or _Netlify_
+- **exporting** the code directly in the _browser_, on the _disk_, or pushing it to a _remote_ location.
 
 The official `teleport` publishers are described in this section:
-* [Now](/project-generators/publishers.html#now)
-* [Netlify](/project-generators/publishers.html#netlify)
-* [GitHub](/project-generators/publishers.html#github)
-* [Zip](/project-generators/publishers.html#zip)
-* [Disk](/project-generators/publishers.html#disk)
+
+- [Now](/project-generators/publishers.html#now)
+- [Netlify](/project-generators/publishers.html#netlify)
+- [GitHub](/project-generators/publishers.html#github)
+- [Zip](/project-generators/publishers.html#zip)
+- [Disk](/project-generators/publishers.html#disk)
 
 Each publisher expects the output of a project generator (a `GeneratedFolder` type) as an argument. Additionally, you may be required to provide different input data, depending on what task is your selected publisher supposed to do (authentication metadata, output paths, deploy tokens)
 
@@ -542,7 +543,7 @@ const publisher = createGithubPublisher({
   project,
   authMeta,
   repositoryOwner,
-  repository
+  repository,
 })
 
 const result = await publisher.publish()
@@ -701,7 +702,7 @@ const project: GeneratedFolder = {
 const result = await ZipPublisher.publish({
   project,
   outputPath,
-  outputZipName
+  outputZipName,
 })
 
 console.log(result)
@@ -745,9 +746,10 @@ interface DiskFactoryParams {
 - **Usage:**
 
   ```typescript
-  import DiskPublisher from "@teleporthq/teleport-publisher-disk"
+  import {createDiskPublisher} from "@teleporthq/teleport-publisher-disk"
 
-  const result = await DiskPublisher.publish({
+  const diskPublisher = createDiskPublisher()
+  const result = await diskPublisher.publish({
     project: /*..*/,
     outputPath: /*..*/
   })
