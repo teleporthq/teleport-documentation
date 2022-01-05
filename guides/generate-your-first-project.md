@@ -3,6 +3,7 @@
 This guide is your starting point in exploring the project generators. To fully understand the process make sure you have a good understanding of the [component generation process](/guides/getting-started.html).
 
 A [project UIDL](/uidl/#project-uidl) can define a fully working website. The UIDL consists of:
+
 - a collection of **component UIDLs**
 - logic for **routing** the different pages of the application
 - **global** settings and meta tags
@@ -18,15 +19,16 @@ Before you use the package, make sure you have a valid ProjectUIDL. You can star
 Then you can use the `teleport-project-generator-next` package in any JS/TS file, like this:
 
 ```javascript
-import nextGenerator from "@teleporthq/teleport-project-generator-next"
+import { createNextProjectGenerator } from "@teleporthq/teleport-project-generator-next"
 
 const uidl = {
   /* your uidl sample */
 }
 
+const nextGenerator = createNextProjectGenerator()
 const result = await nextGenerator.generateProject(uidl)
 
-console.log(result.outputFolder)
+console.log(result)
 ```
 
 The result will be an object of type `GeneratedFolder`:
@@ -41,8 +43,10 @@ interface GeneratedFolder {
 interface GeneratedFile {
   name: string
   content: string
+  contentEncoding?: FileEncoding
   fileType?: string
-  contentEncoding?: string
+  location?: FileLocation
+  status?: string
 }
 ```
 
