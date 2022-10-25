@@ -18,15 +18,17 @@ Before you use the package, make sure you have a valid ProjectUIDL. You can star
 Then you can use the `teleport-project-generator-next` package in any JS/TS file, like this:
 
 ```javascript
-import nextGenerator from "@teleporthq/teleport-project-generator-next"
+import {createNextProjectGenerator} from "@teleporthq/teleport-project-generator-next"
 
 const uidl = {
   /* your uidl sample */
 }
 
-const result = await nextGenerator.generateProject(uidl)
+const generator = createNextProjectGenerator();
+const result = await generator.generateProject(uidl)
 
-console.log(result.outputFolder)
+console.log(result)
+
 ```
 
 The result will be an object of type `GeneratedFolder`:
