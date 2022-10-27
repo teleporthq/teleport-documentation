@@ -40,9 +40,9 @@ In order to accomodate the situations mentioned above, we have expanded the comp
 
 ```ts
 type GenerateComponentFunction = (
-  input: Record<string, unknown>,
-  options: GeneratorOptions
-) => Promise<CompiledComponent>;
+  componentUIDL: ComponentUIDL,
+  options: GenerateOptions
+) => Promise<CompiledComponent>
 
 interface CompiledComponent {
   files: GeneratedFile[];
@@ -50,9 +50,12 @@ interface CompiledComponent {
 }
 
 interface GeneratedFile {
-  name: string;
-  fileType: string;
-  content: string;
+  name: string
+  content: string
+  contentEncoding?: FileEncoding
+  fileType?: string
+  location?: FileLocation
+  status?: string
 }
 ```
 
@@ -62,7 +65,7 @@ A very useless but valid generator would be the one below:
 
 ```typescript
 const generateComponent: GenerateComponentFunction = async (
-  input,
+  componentUIDL,
   options = {}
 ): Promise<CompiledComponent> => {
   return {
@@ -76,7 +79,7 @@ If we would like to return a **Hello World** javascript file without anything we
 
 ```typescript
 const generateComponent: GenerateComponentFunction = async (
-  input,
+  componentUIDL,
   options = {}
 ): Promise<CompiledComponent> => {
   return {
@@ -171,7 +174,7 @@ const validator = new Validator();
 const schemaValidationResult = validator.validateComponentSchema(input);
 const { componentUIDL, valid } = schemaValidationResult;
 if (valid && componentUIDL) {
-  cleanedUIDL = (componentUIDL as unknown) as Record<string, unknown>;
+  const cleanedUIDL = (componentUIDL as unknown) as Record<string, unknown>;
 } else {
   throw new Error(schemaValidationResult.errorMsg);
 }
@@ -299,9 +302,10 @@ The plugin structure implements the following interface:
 
 ```ts
 interface ComponentStructure {
-  chunks: ChunkDefinition[];
-  uidl: ComponentUIDL;
-  dependencies: Record<string, ComponentDependency>;
+    chunks: ChunkDefinition[];
+    uidl: ComponentUIDL | UIDLRootComponent;
+    options: GeneratorOptions;
+    dependencies: Record<string, UIDLDependency>;
 }
 
 type ComponentPlugin = (
@@ -317,15 +321,36 @@ The assembly line and the plugins running inside it work with syntax trees and o
 
 ```ts
 interface ChunkDefinition {
-  type: string;
-  name: string;
-  meta?: any;
-  content: ChunkContent;
-  linkAfter: string[];
+    type: ChunkType;
+    name: string;
+    fileType: FileType;
+    meta?: {
+        nodesLookup?: {
+            container?: Record<string, unknown>;
+        } & Record<string, unknown>;
+        dynamicRefPrefix?: Record<string, unknown>;
+    } & Record<string, unknown>;
+    content: ChunkContent;
+    linkAfter: string[];
 }
 
-// TO BE REVISED
-type ChunkContent = string | any | any[];
+export declare enum ChunkType {
+    AST = "ast",
+    HAST = "hast",
+    STRING = "string"
+}
+
+export declare enum FileType {
+    CSS = "css",
+    HTML = "html",
+    JS = "js",
+    JSON = "json",
+    VUE = "vue",
+    TS = "ts",
+    TSX = "tsx"
+}
+
+type ChunkContent = string | unknown;
 ```
 
 The chunk content is subject to change and become better defined in the comming updates. The idea of chunks is that they will be consumed by syntax tree to code constructors based on the type of chunk.

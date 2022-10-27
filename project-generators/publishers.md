@@ -2,11 +2,11 @@
 
 A publisher is an utility package that takes as input the [custom format](../guides/generate-your-first-project.html) result of a project generator and helps you get a running application faster, either by:
 
-- **deploying** the running app on 3rd party services like *Now* or *Netlify*
+- **deploying** the running app on 3rd party services like *Vercel* or *Netlify*
 - **exporting** the code directly in the *browser*, on the *disk*, or pushing it to a *remote* location.
 
 The official `teleport` publishers are described in this section:
-* [Now](/project-generators/publishers.html#now)
+* [Vercel](/project-generators/publishers.html#vercel)
 * [Netlify](/project-generators/publishers.html#netlify)
 * [GitHub](/project-generators/publishers.html#github)
 * [Zip](/project-generators/publishers.html#zip)
@@ -65,41 +65,71 @@ interface PublisherResponse<T> {
 }
 ```
 
-## Now
+## Vercel
 
-Install the now publisher using the following command
+Install the Vercel publisher using the following command
 
 ```
-npm install @teleporthq/teleport-publisher-now
+npm install @teleporthq/teleport-publisher-vercel
 ```
 
 ### Arguments
 
 ```typescript
-interface NowFactoryParams {
-  project: GeneratedFolder
-  deployToken: string
+interface PublisherFactoryParams {
+    project?: GeneratedFolder;
+}
+
+interface VercelPublisherParams extends PublisherFactoryParams {
+    accessToken: string;
+    projectSlug: string;
+    domainAlias?: string;
+    teamId?: string;
+    version?: number;
+    public?: boolean;
+    target?: string;
+    alias?: string[];
+    individualUpload?: boolean;
+    framework?: string;
 }
 ```
 
 :::tip
-You can create a Zeit deploy token from your [account settings](https://zeit.co/account/tokens).
+You can create a Vercel deploy token from your [account settings](https://vercel.com/account/tokens).
 :::
+
+### Response
+
+```typescript
+interface PublisherResponse<T> {
+    success: boolean;
+    payload?: T;
+}
+
+export interface VercelDeployResponse {
+    id: string;
+    url: string;
+    alias: string[];
+    readyState?: string;
+}
+```
 
 ### API reference
 
 #### `publish(options)`
 
-- **Arguments:** `(NowFactoryParams) options`
-- **Returns:** `PublisherResponse<string>`
+- **Arguments:** `(VercelPublisherParams) options`
+- **Returns:** `PublisherResponse<VercelDeployResponse>`
 - **Usage:**
 
   ```typescript
-  import NowPublisher from "@teleporthq/teleport-publisher-now"
+  import {createVercelPublisher} from "@teleporthq/teleport-publisher-vercel"
 
-  const result = await NowPublisher.publish({
+  const publisher = createVercelPublisher({ accessToken: VERCEL_TOKEN })
+
+  const result = await publisher.publish({
     project: /*..*/,
-    deployToken: /*..*/
+    accessToken: /*..*/
   })
   ```
 
@@ -110,9 +140,9 @@ You can create a Zeit deploy token from your [account settings](https://zeit.co/
   When your publisher factory was initialized with a project as argument or it has been previously set, you have the possiblity to query for it
 
   ```typescript
-  import { createNowPublisher } from "@teleporthq/teleport-publisher-now"
+  import { createVercelPublisher } from "@teleporthq/teleport-publisher-vercel"
 
-  const publisher = createNowPublisher({ project: /*...*/ })
+  const publisher = createVercelPublisher({ project: /*...*/ })
 
   const project = publisher.getProject()
 
@@ -126,12 +156,13 @@ You can create a Zeit deploy token from your [account settings](https://zeit.co/
   You can set the project to the publisher before running the actual `publish` method
 
   ```typescript
-  import NowPublisher from "@teleporthq/teleport-publisher-now"
+  import { createVercelPublisher } from "@teleporthq/teleport-publisher-vercel"
 
   const project: GeneratedFolder = {
     /*..*/
   }
-  NowPublisher.setProject(project)
+  const publisher = createVercelPublisher()
+  publisher.setProject(project)
   ```
 
 #### `getDeployToken()`
@@ -141,11 +172,11 @@ You can create a Zeit deploy token from your [account settings](https://zeit.co/
   When your publisher factory was initialized with a deploy token as argument or it has been previously set, you have the possiblity to query for it
 
   ```typescript
-  import { createNowPublisher } from "@teleporthq/teleport-publisher-now"
+  import { createVercelPublisher } from "@teleporthq/teleport-publisher-vercel"
 
-  const publisher = createNowPublisher({ deployToken: "MY_DEPLOY_TOKEN" })
+  const publisher = createVercelPublisher({ accessToken: "MY_DEPLOY_TOKEN" })
 
-  const deployToken = publisher.getDeployToken()
+  const deployToken = publisher.getAccessToken()
   ```
 
 #### `setDeployToken(token)`
@@ -156,23 +187,26 @@ You can create a Zeit deploy token from your [account settings](https://zeit.co/
   You can set the deploy token to the publisher before running the actual `publish` method
 
   ```typescript
-  import NowPublisher from "@teleporthq/teleport-publisher-now"
+  import { createVercelPublisher } from "@teleporthq/teleport-publisher-vercel"
 
   const token = "YOUR_DEPLOY_TOKEN"
-  NowPublisher.setToken(token)
+  const publisher = createVercelPublisher()
+  publisher.setAccessToken(token)
   ```
 
 ### Example
 
 ```typescript
-import NowPublisher from "@teleporthq/teleport-publisher-now"
+import { createVercelPublisher } from "@teleporthq/teleport-publisher-vercel"
 
-const deployToken = "YOUR_DEPLOY_TOKEN_HERE"
+const accessToken = "YOUR_DEPLOY_TOKEN_HERE"
 const project: GeneratedFolder = {
   /* ... */
 }
 
-const result = await NowPublisher.publish({ project, deployToken })
+const publisher = createVercelPublisher({ project, accessToken})
+
+const result = await publisher.publish()
 
 console.log(result)
 ```
@@ -181,8 +215,12 @@ Sample output:
 
 ```json
 {
-  success: true
-  payload: "https://teleport-project-template-next.now.sh"
+  success: true,  
+  payload: {
+    id: 'dpl_8pLBsefg4YFYMuxx3wqv2MRefy',
+    url: 'teleport-project-template-next.vercel.app',
+    alias: [ 'teleport-project-template-next.vercel.app' ]
+  }
 }
 ```
 
@@ -280,7 +318,7 @@ You can create a Netlify access token from your [account settings](https://app.n
   import NetlifyPublisher from "@teleporthq/teleport-publisher-netlify"
 
   const token = "YOUR_ACCESS_TOKEN"
-  NowPublisher.setAccessToken(token)
+  NetlifyPublisher.setAccessToken(token)
   ```
 
 ### Example
