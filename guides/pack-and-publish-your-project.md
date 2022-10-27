@@ -31,7 +31,7 @@ const projectUidl: ProjectUIDL = {
   /* ... */
 }
 
-NowPublisher.setAccessToken(Vercel_TOKEN)
+NowPublisher.setAccessToken(VERCEL_TOKEN)
 
 const vercelPublisher = createVercelPublisher({accessToken: VERCEL_TOKEN})
 const projectPacker = createProjectPacker()
